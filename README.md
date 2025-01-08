@@ -1,0 +1,1 @@
+Done splitation with LinarLayout with weighted distribution, but a while space used to remain downside the bottom nagivation view in the phones having rounded edges. Solved this problem in next branch.   
