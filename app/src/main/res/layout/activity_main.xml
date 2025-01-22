@@ -10,6 +10,7 @@
     tools:context=".MainActivity4">
 
     <LinearLayout
+        android:layout_above="@id/bottomNavBar"
         android:id="@+id/linearLayoutMainActivity"
         android:background="@color/black"
         android:orientation="vertical"

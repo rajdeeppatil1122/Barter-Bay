@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -15,6 +16,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    viewBinding{
+        enabled=true
     }
 
     buildTypes {
@@ -39,6 +44,11 @@ dependencies {
     implementation libs.material
     implementation libs.androidx.activity
     implementation libs.androidx.constraintlayout
+    implementation libs.firebase.database
+    implementation platform('com.google.firebase:firebase-bom:33.8.0')  // when we write this, no need to write versions of the ohter firebase services
+    implementation libs.material
+    implementation libs.firebase.auth
+    implementation libs.firebase.storage
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core

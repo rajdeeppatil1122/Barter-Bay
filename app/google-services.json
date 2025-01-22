@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "444583456022",
+    "firebase_url": "https://practice-project-2aba8-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "practice-project-2aba8",
+    "storage_bucket": "practice-project-2aba8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444583456022:android:7fe977c38d96c3a8687437",
+        "android_client_info": {
+          "package_name": "com.barterbay.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtjb30e9HoEOG_DfVTFP4w_91tCTc5cS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
