@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/productNameFragment"
+    android:id="@+id/nav_graph.xml">
+
+    <fragment
+        tools:layout="@layout/fragment_product_name"
+        android:id="@+id/productNameFragment"
+        android:name="com.barterbay.app.ProductNameFragment"
+        android:label="What are you listing?">
+        <action
+            android:id="@+id/action_name_to_category"
+            app:destination="@id/categoryFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/fragment_category"
+        android:id="@+id/categoryFragment"
+        android:name="com.barterbay.app.CategoryFragment"
+        android:label="Select Category">
+        <action
+            android:id="@+id/action_category_to_images"
+            app:destination="@id/imagesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/fragment_images"
+        android:id="@+id/imagesFragment"
+        android:name="com.barterbay.app.ImagesFragment"
+        android:label="Upload Images">
+        <action
+            android:id="@+id/action_images_to_price"
+            app:destination="@id/priceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/fragment_price"
+        android:id="@+id/priceFragment"
+        android:name="com.barterbay.app.PriceFragment"
+        android:label="Set Price">
+        <action
+            android:id="@+id/action_price_to_summary"
+            app:destination="@id/summaryFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/fragment_summary"
+        android:id="@+id/summaryFragment"
+        android:name="com.barterbay.app.SummaryFragment"
+        android:label="Summary" />
+
+</navigation>

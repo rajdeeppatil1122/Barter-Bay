@@ -6,6 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.barterbay.app.databinding.ActivityPostListing7Binding
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
@@ -19,26 +24,47 @@ class PostListingActivity7 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPostListing7Binding.inflate(layoutInflater)
         setContentView(binding?.root)
+        setSupportActionBar(binding!!.toolbar)
 
-        val firebaseDB = Firebase.database  // this is Database
-        val firebaseStorage = Firebase.storage  // this is Storage
-        val firebaseDBReference = firebaseDB.getReference()   // this is Database Reference
-        val firebaseStorageReference = firebaseStorage.getReference()   // this is Storage Reference
-        binding!!.activityPostListingButton.setOnClickListener {
-            val intent = Intent()
-            intent.setType("image/*")
-            intent.setAction(Intent.ACTION_GET_CONTENT)
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        binding!!.toolbar.title = "What are you listing?"
+        binding!!.toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
 
-            startActivityForResult(Intent.createChooser(intent, "Select Pictures"), 101)
+// Change the title size programmatically
+        binding!!.toolbar.setTitleTextAppearance(this, R.style.CustomToolbarTitle)
 
-        }
+//        val firebaseDB = Firebase.database  // this is Database
+//        val firebaseStorage = Firebase.storage  // this is Storage
+//        val firebaseDBReference = firebaseDB.getReference()   // this is Database Reference
+//        val firebaseStorageReference = firebaseStorage.getReference()   // this is Storage Reference
+//        binding!!.activityPostListingButton.setOnClickListener {
+//            val intent = Intent()
+//            intent.setType("image/*")
+//            intent.setAction(Intent.ACTION_GET_CONTENT)
+//            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//
+//            startActivityForResult(Intent.createChooser(intent, "Select Pictures"), 101)
+//
+//        }
 
-        val productFirebaseRef = firebaseDB.getReference("productsByCategory")
+        // Ensure NavHostFragment is set up
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
+//        val navHostFragment = NavHostFragment.create(R.navigation.nav_graph)
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.nav_host_fragment, navHostFragment)
+//            .setPrimaryNavigationFragment(navHostFragment)
+//            .commit()
+
+
+//         Handle action bar navigation
+        setupActionBarWithNavController(navController)
+
+//        val productFirebaseRef = firebaseDB.getReference("productsByCategory")
 
         // Create a new product
-        val productID = productFirebaseRef.push().key
-        Toast.makeText(this, productID.toString(), Toast.LENGTH_SHORT).show()
+//        val productID = productFirebaseRef.push().key
+//        Toast.makeText(this, productID.toString(), Toast.LENGTH_SHORT).show()
         val newProduct = mapOf(
             "name" to "Math Textbook",
             "description" to "A detailed algebra guide.",
@@ -51,29 +77,29 @@ class PostListingActivity7 : AppCompatActivity() {
             "imageUrls" to listOf("https://.../image1.jpg", "https://.../image2.jpg")
         )
 
-        binding!!.acativityPostListingSaveButton.setOnClickListener{
-//            // Save product
+//        binding!!.acativityPostListingSaveButton.setOnClickListener{
+            // Save product
 //            newProduct?.let {       // Cleaner Code: if(newProduct != null)  --> It is just for tackling with the NullPointerException, that's it.
 //                productFirebaseRef.child("books").child("$productID").setValue(newProduct)
 //            }
 
-            // save to storage
-            val natureRef = firebaseStorageReference.child("nature")    // saves single file in root level
-            val natureImageRef = firebaseStorageReference.child("images/nature.jpg")    // saves single file in folder called 'images', name is same as of previous.
-            Toast.makeText(this, "$selectedUri", Toast.LENGTH_SHORT).show()
-            selectedUri?.let { it1 ->
-                natureRef.putFile(it1)
-
-                    .addOnSuccessListener {
-                    Toast.makeText(this, "Uploaded", Toast.LENGTH_SHORT).show()
-                    }
-
-                    .addOnFailureListener { exception ->
-                        android.util.Log.e("Firebase Upload", "Error uploading file", exception)
-                        Toast.makeText(this, "Upload Failed: ${exception.message}", Toast.LENGTH_SHORT).show()
-                    }
-            }
-        }
+//            // save to storage
+//            val natureRef = firebaseStorageReference.child("nature")    // saves single file in root level
+//            val natureImageRef = firebaseStorageReference.child("images/nature.jpg")    // saves single file in folder called 'images', name is same as of previous.
+//            Toast.makeText(this, "$selectedUri", Toast.LENGTH_SHORT).show()
+//            selectedUri?.let { it1 ->
+//                natureRef.putFile(it1)
+//
+//                    .addOnSuccessListener {
+//                    Toast.makeText(this, "Uploaded", Toast.LENGTH_SHORT).show()
+//                    }
+//
+//                    .addOnFailureListener { exception ->
+//                        android.util.Log.e("Firebase Upload", "Error uploading file", exception)
+//                        Toast.makeText(this, "Upload Failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+//                    }
+//            }
+//        }
 
 
     }
@@ -97,22 +123,32 @@ class PostListingActivity7 : AppCompatActivity() {
 //                selectedUri = selectedImageUri
                 Toast.makeText(this, "$selectedImageUri", Toast.LENGTH_SHORT).show()
                 Log.d("URI MESSAGE", selectedImageUri.toString())
-                binding!!.activityPostListingImageView.setImageURI(selectedImageUri)
+//                binding!!.activityPostListingImageView.setImageURI(selectedImageUri)
             }
             else if (clipData != null) {  // if it contains multiple files
                 for (i in 0 until clipData.itemCount) {     // i in 0 means, i starts from 0
                     var uri = clipData.getItemAt(i).uri
 
                     if (i == 0) {
-                        binding!!.activityPostListingImageView.setImageURI(uri)
+//                        binding!!.activityPostListingImageView.setImageURI(uri)
                         Toast.makeText(this, "$uri", Toast.LENGTH_SHORT).show()
                         selectedUri = uri
                     }
                     if (i == 1) {
-                        binding!!.activityPostListingImageView2.setImageURI(uri)
+//                        binding!!.activityPostListingImageView2.setImageURI(uri)
                     }
                 }
             }
         }
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        // Get the NavController
+        val navController = findNavController(R.id.nav_host_fragment)
+
+        // Navigate up using the NavController (triggers pop animations)
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+
 }

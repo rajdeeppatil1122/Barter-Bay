@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".ProductNameFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:hint="Enter Product Name"
+        app:hintTextColor="#191919"
+        android:hapticFeedbackEnabled="true"
+        android:textColorHint="#4A4A4A"
+        app:boxStrokeColor="@color/text_input_stroke_color"
+        android:layout_height="wrap_content">
+
+        <AutoCompleteTextView
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:id="@+id/editTextProductName"
+            android:inputType="textShortMessage"
+            android:textColor="#191919"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:layout_width="match_parent"
+            android:layout_height="67dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:backgroundTint="@color/white"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:text="Button"
+        android:id="@+id/button"/>
+
+    <!-- Collapsible Instructional Tip Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_gravity="end"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="10dp"
+        android:backgroundTint="@color/white"
+        android:id="@+id/tip_card1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"> <!-- Initially collapsed -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tip_text1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="A clear and specific product name makes it easier for buyers to find your listing. Use keywords and details, like 'Samsung Galaxy S21 (128GB, Phantom Gray).' Avoid generic names like 'Phone' or 'Mobile.'"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Collapsible Instructional Tip Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_gravity="end"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="10dp"
+        android:backgroundTint="@color/white"
+        android:id="@+id/tip_card2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"> <!-- Initially collapsed -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tip_text2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Highlight the brand, model, and unique features in your product name. For instance, 'IKEA Study Desk with Drawers (Brown, 4ft).' This ensures your listing stands out in searches."
+                android:textColor="#333333"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Collapsible Instructional Tip Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_gravity="end"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="10dp"
+        android:backgroundTint="@color/white"
+        android:id="@+id/tip_card3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"> <!-- Initially collapsed -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tip_text3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Short and descriptive names work best! Try something like 'Nike Running Shoes (Men’s, Size 9, Blue).' This captures buyer attention faster than generic terms."
+                android:textColor="#333333"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_margin="7dp"
+        android:layout_gravity="center"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:id="@+id/lottieView"
+        android:visibility="gone"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
+
+    <Button
+        android:textColor="@color/white"
+        android:id="@+id/submitBtn"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next Buton"/>
+
+    </LinearLayout>
+
+</ScrollView>
