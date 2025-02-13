@@ -53,7 +53,7 @@ class CustomCategoryDialog(
                     dismiss()
                     onCategorySubmitted(categoryText)
                 }, 500)
-            } 
+            }
         }
     }
 }
