@@ -51,11 +51,14 @@ dependencies {
     implementation libs.firebase.storage
     implementation libs.androidx.navigation.fragment.ktx
     implementation libs.androidx.navigation.ui.ktx
+    implementation libs.androidx.ui.graphics.android
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
     implementation "androidx.navigation:navigation-fragment-ktx:2.7.4"
     implementation "androidx.navigation:navigation-ui-ktx:2.7.4"
     implementation 'com.airbnb.android:lottie:3.0.0'
+//    implementation'com.squareup.okhttp3:okhttp:4.9.1'
+
 
 }

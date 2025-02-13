@@ -1,24 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="8dp"
-    android:gravity="center"
     tools:context=".CategoryFragment">
 
     <!-- Search Bar -->
-    <EditText
-        android:id="@+id/searchEditText"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewSearchBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Search categories..."
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:textSize="16sp"/>
+        android:layout_height="60dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="3dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="6dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <!-- Custom Search Icon -->
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_search"
+                app:tint="#808080" />
+
+            <!-- Search EditText -->
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="Search categories..."
+                android:paddingStart="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="#808080"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 
     <!-- RecyclerView for Categories -->
@@ -26,9 +57,53 @@
         android:id="@+id/categoryRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/cardViewSearchBar"
         android:paddingTop="8dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"/>
+        app:spanCount="3" />
 
 
-</LinearLayout>
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/selectCategoryNextBtn"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="70dp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginBottom="5dp"-->
+<!--        android:backgroundTint="#151515"-->
+<!--        android:text="Select Category"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:cornerRadius="15dp" />-->
+
+
+    <androidx.cardview.widget.CardView
+        android:foreground="@drawable/ripple_effect"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/selectCategoryNextBtn"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="8dp"
+        android:backgroundTint="#151515">
+
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/selectCategoryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Select Category"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</RelativeLayout>

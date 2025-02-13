@@ -1,5 +1,6 @@
 package com.barterbay.app
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,7 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.graphics.Color
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.navigation.fragment.findNavController
@@ -17,12 +21,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.barterbay.app.databinding.FragmentCategoryBinding
 
 
-class CategoryFragment : Fragment() {
+class CategoryFragment : Fragment(), CategoryAdapter.OnCategorySelectedListener {
     private lateinit var viewModel: PostProductViewModel
 
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var categoryRecyclerView: RecyclerView
     private lateinit var searchEditText: EditText
+    private var binding: FragmentCategoryBinding? = null
 
     private val categoryList = listOf(
         CategoryModel("Action Cameras", "actioncameras.json"),
@@ -94,7 +99,7 @@ class CategoryFragment : Fragment() {
 
 
 //        These 5 causes problems
-//        CategoryModel("Watches", "watches.json"),
+//
 //        CategoryModel("Software Licenses", "softwarelicense.json"),
 //        CategoryModel("Sports Equipment", "sportsequipment.json"),
 //        CategoryModel("Sports Jerseys", "sportsjerseys.json"),
@@ -115,19 +120,19 @@ class CategoryFragment : Fragment() {
         CategoryModel("Vehicles", "vehicles.json"),
         CategoryModel("VR Headsets", "vrheadsets.json"),
         CategoryModel("Wallets", "wallets.json"),
-
+        CategoryModel("Watches", "fashionwatches.json"),
         CategoryModel("Water Bottles", "waterbottles.json"),
         CategoryModel("Water Filters", "waterfilters.json"),
         CategoryModel("White Boards", "whiteboards.json"),
-        CategoryModel("Yoga Mats", "yogamats.json")
+        CategoryModel("Yoga Mats", "yogamats.json"),
+        CategoryModel("Other", "other.json")
     )
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentCategoryBinding.inflate(inflater, container, false)   // Inflate the layout for this fragment while binding
+        binding = FragmentCategoryBinding.inflate(inflater, container, false)   // Inflate the layout for this fragment while binding
 
         // viewModel initialization
         viewModel = ViewModelProvider(requireActivity()).get(PostProductViewModel::class.java)
@@ -143,12 +148,14 @@ class CategoryFragment : Fragment() {
 
 
         // Setup RecyclerView
-        categoryAdapter = CategoryAdapter(categoryList)
-        binding.categoryRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.categoryRecyclerView.adapter = categoryAdapter
+        categoryAdapter = CategoryAdapter(categoryList, this)
+        binding!!.categoryRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
+        val spacingItemDecoration = GridSpacingItemDecoration(13, 0) // Adjust vertical and horizontal spacing as needed
+        binding!!.categoryRecyclerView.addItemDecoration(spacingItemDecoration)
+        binding!!.categoryRecyclerView.adapter = categoryAdapter
 
         // Search functionality
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+        binding!!.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 categoryAdapter.filter.filter(s)
@@ -156,8 +163,12 @@ class CategoryFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        binding!!.selectCategoryNextBtn.setOnClickListener{
+//            context?.toast("Clicked")
+        }
 
-        return binding.root
+
+        return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -166,4 +177,37 @@ class CategoryFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
+    override fun onCategorySelected(isSelected: Boolean, categoryName: String) {
+        binding?.selectCategoryNextBtn?.apply {
+            if (isSelected) {
+                if (visibility != View.VISIBLE) {
+                    // First time selection → Fade in the button
+                    alpha = 0f
+                    visibility = View.VISIBLE
+                    animate().alpha(1f).setDuration(200).start()
+                }
+
+                // **Only fade text if it's changing**
+                if (binding!!.selectCategoryText.text != categoryName) {
+                    binding!!.selectCategoryText.apply {
+                        animate().alpha(0f).setDuration(100).withEndAction {
+                            text = categoryName  // Update text
+                            animate().alpha(1f).setDuration(200).start() // Fade in new text
+                        }.start()
+                    }
+                }
+            } else {
+                // If deselected (clicked the same category again), fade out the button
+                animate().alpha(0f).setDuration(200).withEndAction {
+                    visibility = View.INVISIBLE
+                    isEnabled = false
+                }.start()
+            }
+        }
+    }
+
+    // Create an extension function for toast:
+    fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT){
+        Toast.makeText(this, message, duration).show()
+    }
 }
