@@ -1,0 +1,1 @@
+I am actually seeing the sharp corder in grey color when th edialog opens, and then over that grey box, i can see the rounded corner cardview. We are now going to use: BottomSheetDialog is a modern and aesthetic way to show a custom category input dialog. It appears from the bottom of the screen smoothly and supports animations and rounded corners by default.
