@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:gravity="center"
-        android:text="Good, Hardworking &amp; Spiritual"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="30dp"/>
 

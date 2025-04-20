@@ -11,6 +11,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,8 @@ class CategoryAdapter(private var categoryList: List<CategoryModel>, private val
     private var filteredList: List<CategoryModel> = categoryList
     private val firebaseStorageRef = Firebase.storage.reference
     private var selectedPosition: Int = RecyclerView.NO_POSITION // Track selected item
+    // Add this getter method (modify your CategoryAdapter to expose the selected position)
+    fun getSelectedPosition(): Int = selectedPosition
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val categoryName: TextView = itemView.findViewById(R.id.categoryName)
@@ -53,9 +56,9 @@ class CategoryAdapter(private var categoryList: List<CategoryModel>, private val
         // Check if the current position is selected, set color accordingly
         val isSelected = position == selectedPosition
         val startColor = if (isSelected)
-            ContextCompat.getColor(holder.itemView.context, R.color.light_green_inapp)
-        else
             ContextCompat.getColor(holder.itemView.context, R.color.light_blue_inapp)
+        else
+            ContextCompat.getColor(holder.itemView.context, R.color.more_light_blue_inapp)
 
         holder.cardView.setCardBackgroundColor(startColor)
 
@@ -70,27 +73,33 @@ class CategoryAdapter(private var categoryList: List<CategoryModel>, private val
 
         holder.cardView.setOnClickListener {
             val previousPosition = selectedPosition
-            selectedPosition = if (selectedPosition == position) RecyclerView.NO_POSITION else position // Toggle selection
-
-            // Animate color change for the clicked item
-            animateColorChange(holder.cardView, startColor,
-                if (selectedPosition == position)
-                    ContextCompat.getColor(holder.itemView.context, R.color.light_green_inapp)
-                else
-                    ContextCompat.getColor(holder.itemView.context, R.color.light_blue_inapp)
-            )
-
-            // Notify fragment about selection change
-            listener.onCategorySelected(selectedPosition != RecyclerView.NO_POSITION, holder.categoryName.text.toString())
-
-            // Animate the previously selected card back to white (if any)
-            if (previousPosition != RecyclerView.NO_POSITION && previousPosition != selectedPosition) {
-                notifyItemChanged(previousPosition) // Reset previous selection
+            selectedPosition = if (selectedPosition == position) {
+                RecyclerView.NO_POSITION
+            } else {
+                position
             }
 
-            if(position==filteredList.size-1){
-//                holder.itemView.context.toast("Others")
-                showCustomCategoryDialog(holder.itemView.context)
+            // Animate color change
+            animateColorChange(holder.cardView, startColor,
+                if (selectedPosition == position) {
+                    if(position == categoryList.size - 1) {
+                        showCustomCategoryDialog(holder.itemView.context, position, holder)
+                    }
+                    ContextCompat.getColor(holder.itemView.context, R.color.light_blue_inapp)
+                } else {
+                    ContextCompat.getColor(holder.itemView.context, R.color.more_light_blue_inapp)
+                }
+            )
+
+            // Notify fragment
+            listener.onCategorySelected(
+                selectedPosition != RecyclerView.NO_POSITION,
+                if (selectedPosition != RecyclerView.NO_POSITION) category.name else "", category.lottieFile
+            )
+
+            // Reset previous selection if needed
+            if (previousPosition != RecyclerView.NO_POSITION && previousPosition != selectedPosition) {
+                notifyItemChanged(previousPosition)
             }
         }
 
@@ -175,20 +184,69 @@ class CategoryAdapter(private var categoryList: List<CategoryModel>, private val
         }
     }
 
+    fun setSelectedPosition(position: Int) {
+        val previousPosition = selectedPosition
+        selectedPosition = position
+        if (previousPosition != RecyclerView.NO_POSITION) {
+            notifyItemChanged(previousPosition)
+        }
+        if (position != RecyclerView.NO_POSITION) {
+            notifyItemChanged(position)
+        }
+    }
+
      // Create an extension function for toast:
     fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT){
         Toast.makeText(this, message, duration).show()
     }
 
     interface OnCategorySelectedListener {
-        fun onCategorySelected(isSelected: Boolean, categoryName: String)  // Notify Fragment when selection changes
+        fun onCategorySelected(isSelected: Boolean, categoryName: String, categoryLottie: String)  // Notify Fragment when selection changes
     }
 
-    private fun showCustomCategoryDialog(context: Context) {
-        val dialog = CustomCategoryDialog(context) { _ ->
+    private fun showCustomCategoryDialog(context: Context, position: Int, holder: CategoryViewHolder) {
+        var categoryNameClass : String? = null
+        var categoryLottieClass : String? = ""  // IT SHOULD NOT BE NULL
+        val bottomSheet = CustomCategoryBottomSheet { categoryName ->
+            // Handle the submitted category name
+            // context.toast("Category Submitted: $categoryName")
+            categoryNameClass = categoryName
+        }
+
+        bottomSheet.onDismissListener = {
+            Log.d("DialogEvent", "BottomSheet dismissed in RecyclerView!")
+            Toast.makeText(context, "BottomSheet dismissed!", Toast.LENGTH_SHORT).show()
+            // Notify fragment about selection change
+
+            if(categoryNameClass==null) {
+                // To toggle colors and set the toggle-logic intact/consistent for future toggles, if we don't this, it will cause toggle problems (reverse problems) in the future toggle operations, hence it was necessary to update selectedPosition for CORRECT future toggle operations.
+                selectedPosition =
+                    if (selectedPosition == position) RecyclerView.NO_POSITION else position // Toggle selection
+
+                // Animate color change for the clicked item
+                animateColorChange(
+                    holder.cardView,
+                    ContextCompat.getColor(holder.itemView.context, R.color.light_blue_inapp),
+                    if (selectedPosition == position) {
+                        ContextCompat.getColor(holder.itemView.context, R.color.light_blue_inapp)
+                    } else {
+                        ContextCompat.getColor(holder.itemView.context, R.color.light_blue_inapp)
+                    }
+                )
+
+                // To dismiss button
+                listener.onCategorySelected(false, "", "")
+            }
+            else{
+                listener.onCategorySelected(selectedPosition != RecyclerView.NO_POSITION, categoryNameClass!!, categoryLottieClass!!)
+
+            }
 
         }
-        dialog.show()
+
+        bottomSheet.show((context as AppCompatActivity).supportFragmentManager, "CustomCategoryBottomSheet")
     }
+
+
 
 }

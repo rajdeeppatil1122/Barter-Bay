@@ -1,25 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
+    android:background="@color/white"
+    android:padding="16dp"
     tools:context=".PriceFragment">
 
-
-    <EditText
-        android:id="@+id/price"
-        android:layout_width="200dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
-    <Button
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next Button"
-        android:id="@+id/nextButton"/>
+        <!-- Top Hint Text -->
+        <TextView
+            android:id="@+id/setPriceHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Let others know what your product is worth."
+            android:textColor="#191919"
+            android:textSize="14sp" />
 
-</LinearLayout>
+        <!-- Product Name Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/productNameCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/black"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="4dp">
+
+            <TextView
+                android:id="@+id/productNameText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center"
+                android:padding="16dp"
+                android:text="Product Name"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Lottie Animation -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/priceLottie"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+
+        <!-- Price Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/priceInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="#191919"
+            android:textColorHint="#191919">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/priceEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your price"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:textColor="#191919"
+                android:textColorHint="#191919" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Optional Note -->
+        <TextView
+            android:id="@+id/barterNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="This price is flexible since it's a barter item."
+            android:textColor="#191919"
+            android:textSize="13sp" />
+
+        <!-- Continue Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/continueButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/black"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/ripple_effect"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:text="Continue"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="15dp" />
+    </LinearLayout>
+
+</ScrollView>

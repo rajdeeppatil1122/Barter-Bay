@@ -66,14 +66,21 @@ class ProductNameFragment : Fragment() {
             }, 1)
         }
 
-        if(viewModel.lottieInNameFragment.value != null){
+        // Sets the name saved in viewModel
+        if(viewModel.name.value != null){
+            binding!!.editTextProductName.text = Editable.Factory.getInstance().newEditable(viewModel.name.value)
+        }
+
+        // Sets the lottie file saved in viewModel
+        if (viewModel.lottieInNameFragment.value != null) {
             binding!!.lottieView.visibility = View.VISIBLE
             loadLottieAnimation2(viewModel.lottieInNameFragment.value!!)
         }
 
         binding!!.editTextProductName.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE ||
-                (event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER)) {
+                (event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER)
+            ) {
 
                 hideKeyboardAndExecuteLogic(v)
                 true
@@ -147,18 +154,26 @@ class ProductNameFragment : Fragment() {
 
 
         binding!!.submitBtn.setOnClickListener {
-//            if (isTipCardVisible && flagForCardViewPreSetting != 2) { // Regular slide-out with animation
-            slideOut2(binding!!.tipCard1)
-            slideOut(binding!!.tipCard2)
-            slideOut2(binding!!.tipCard3)
-//            }
-            viewModel.name.value = binding!!.editTextProductName.text.toString()
-            viewModel.lottieInNameFragment.value = currentLottieFile    // string value
 
-            lifecycleScope.launch {     // modern & efficient, threading, (coroutines)
-                delay(1000)
-                findNavController().navigate(com.barterbay.app.R.id.action_name_to_category)
+            if (!isProductNameValid()) {
+                binding!!.editTextProductName.error = "Product name is required"
+                binding!!.editTextProductName.requestFocus()
+                Toast.makeText(context, "Please enter a product name", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+            else {
+//            if (isTipCardVisible && flagForCardViewPreSetting != 2) { // Regular slide-out with animation
+                slideOut2(binding!!.tipCard1)
+                slideOut(binding!!.tipCard2)
+                slideOut2(binding!!.tipCard3)
+//            }
+                viewModel.name.value = binding!!.editTextProductName.text.toString()
+                viewModel.lottieInNameFragment.value = currentLottieFile    // string value
+
+                lifecycleScope.launch {     // modern & efficient, threading, (coroutines)
+                    delay(1000)
+                    findNavController().navigate(com.barterbay.app.R.id.action_name_to_category)
+                }
 
 //            else { // Slide-in
 //                binding!!.tipCard1.visibility = View.VISIBLE
@@ -167,6 +182,7 @@ class ProductNameFragment : Fragment() {
 //                slideIn2(binding!!.tipCard3)
 //            }
 //            isTipCardVisible = !isTipCardVisible
+            }
         }
 
         binding!!.editTextProductName.setOnFocusChangeListener { kuchbhi, changeHuaHainYaNahiHuaHain ->
@@ -206,6 +222,12 @@ class ProductNameFragment : Fragment() {
 
 
         return binding!!.root
+    }
+
+    private fun isProductNameValid(): Boolean {
+        val name = binding!!.editTextProductName.text?.toString()?.trim()
+        return !name.isNullOrEmpty() && name.length >= 3  // minimum 3 characters
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -1287,245 +1309,2143 @@ class ProductNameFragment : Fragment() {
         binding!!.editTextProductName.setAdapter(adapter)
 
 
-
 // Firebase Storage reference
 
 
 // Download file from Firebase Storage
 
 
-
     }
 
     private fun logicForLoadingLottieIfUserEnterNoPreDefinedInputs(enteredText: String) {
-        var text : String = enteredText.lowercase()
+        var text: String = enteredText.lowercase()
         text = text.replace("\\s".toRegex(), "")
 //        Toast.makeText(requireContext(), "SECONDARY : $text", Toast.LENGTH_SHORT).show()
 
-        if  (listOf("smartphone", "mobile", "android", "iphone", "samsung", "redmi", "oneplus", "oppo", "vivo", "pixel", "realme", "asus", "nokia", "huawei", "motorola").any { text.contains(it) }) {
+        if (listOf(
+                "smartphone",
+                "mobile",
+                "android",
+                "iphone",
+                "samsung",
+                "redmi",
+                "oneplus",
+                "oppo",
+                "vivo",
+                "pixel",
+                "realme",
+                "asus",
+                "nokia",
+                "huawei",
+                "motorola"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("smartphones")
-        } else if (listOf("fashionwatch", "watch", "rolex", "casio", "fossil", "titan", "applewatch", "samsungwatch", "seiko", "timex", "citizen", "garmin", "hublot", "rado", "omega", "longines").any { text.contains(it) }) {
+        } else if (listOf(
+                "fashionwatch",
+                "watch",
+                "rolex",
+                "casio",
+                "fossil",
+                "titan",
+                "applewatch",
+                "samsungwatch",
+                "seiko",
+                "timex",
+                "citizen",
+                "garmin",
+                "hublot",
+                "rado",
+                "omega",
+                "longines"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("fashionwatches")
-        } else if (listOf("applemacbookvariant", "macbook", "applelaptop", "macbookpro", "macbookair", "m1macbook", "m2macbook", "macos", "applem1", "applem2", "macbookm1", "macbookm2", "applemac", "retinamac", "macnotebook", "macbookaccessories").any { text.contains(it) }) {
+        } else if (listOf(
+                "applemacbookvariant",
+                "macbook",
+                "applelaptop",
+                "macbookpro",
+                "macbookair",
+                "m1macbook",
+                "m2macbook",
+                "macos",
+                "applem1",
+                "applem2",
+                "macbookm1",
+                "macbookm2",
+                "applemac",
+                "retinamac",
+                "macnotebook",
+                "macbookaccessories"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("applemacbookvarients")
-        } else if (listOf("fashionshoes", "sneaker", "nike", "adidas", "puma", "reebok", "vans", "jordans", "converse", "asics", "underarmour", "fila", "woodland", "newbalance", "crocs", "louisvuittonshoes").any { text.contains(it) }) {
+        } else if (listOf(
+                "fashionshoes",
+                "sneaker",
+                "nike",
+                "adidas",
+                "puma",
+                "reebok",
+                "vans",
+                "jordans",
+                "converse",
+                "asics",
+                "underarmour",
+                "fila",
+                "woodland",
+                "newbalance",
+                "crocs",
+                "louisvuittonshoes"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("fashionshoes")
-        } else if (listOf("camera", "dslr", "mirrorless", "canon", "nikon", "sonyalpha", "gopro", "fujifilm", "olympus", "panasoniclumix", "leica", "instax", "blackmagic", "cinemacamera", "polaroid", "securitycamera").any { text.contains(it) }) {
+        } else if (listOf(
+                "camera",
+                "dslr",
+                "mirrorless",
+                "canon",
+                "nikon",
+                "sonyalpha",
+                "gopro",
+                "fujifilm",
+                "olympus",
+                "panasoniclumix",
+                "leica",
+                "instax",
+                "blackmagic",
+                "cinemacamera",
+                "polaroid",
+                "securitycamera"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("cameras")
-        } else if (listOf("fashionsunglasses", "sunglasses", "rayban", "oakley", "fastrack", "prada", "burberry", "gucci", "versace", "armani", "policeglasses", "maui", "dolcegabbanaglasses", "aviators", "wayfarers", "cateyeglasses", "polarizedsunglasses").any { text.contains(it) }) {
+        } else if (listOf(
+                "fashionsunglasses",
+                "sunglasses",
+                "rayban",
+                "oakley",
+                "fastrack",
+                "prada",
+                "burberry",
+                "gucci",
+                "versace",
+                "armani",
+                "policeglasses",
+                "maui",
+                "dolcegabbanaglasses",
+                "aviators",
+                "wayfarers",
+                "cateyeglasses",
+                "polarizedsunglasses"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("fashionsunglasses")
-        } else if (listOf("musicalinstrument", "guitar", "piano", "violin", "flute", "ukulele", "trumpet", "harmonica", "drums", "synthesizer", "cajon", "tabla", "saxophone", "clarinet", "cello").any { text.contains(it) }) {
+        } else if (listOf(
+                "musicalinstrument",
+                "guitar",
+                "piano",
+                "violin",
+                "flute",
+                "ukulele",
+                "trumpet",
+                "harmonica",
+                "drums",
+                "synthesizer",
+                "cajon",
+                "tabla",
+                "saxophone",
+                "clarinet",
+                "cello"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("musicalinstruments")
-        } else if (listOf("vehicle", "car", "bike", "scooter", "electricbike", "bicycle", "honda", "tata", "hyundai", "bajaj", "royalenfield", "suzuki", "toyota", "ford", "audi", "bmw").any { text.contains(it) }) {
+        } else if (listOf(
+                "vehicle",
+                "car",
+                "bike",
+                "scooter",
+                "electricbike",
+                "bicycle",
+                "honda",
+                "tata",
+                "hyundai",
+                "bajaj",
+                "royalenfield",
+                "suzuki",
+                "toyota",
+                "ford",
+                "audi",
+                "bmw"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("vehicles")
-        } else if (listOf("homeappliance", "refrigerator", "washingmachine", "microwave", "airconditioner", "geyser", "vacuumcleaner", "fan", "mixergrinder", "waterpurifier", "heater", "airpurifier", "chimney", "dishwasher", "cooler").any { text.contains(it) }) {
+        } else if (listOf(
+                "homeappliance",
+                "refrigerator",
+                "washingmachine",
+                "microwave",
+                "airconditioner",
+                "geyser",
+                "vacuumcleaner",
+                "fan",
+                "mixergrinder",
+                "waterpurifier",
+                "heater",
+                "airpurifier",
+                "chimney",
+                "dishwasher",
+                "cooler"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("homeappliances")
-        } else if (listOf("book", "novel", "fiction", "nonfiction", "textbook", "comic", "mysterybook", "biographies", "selfhelpbook", "mangabook", "academicbook", "engineeringbook", "medicalbook", "businessbook", "literaturebooks").any { text.contains(it) }) {
+        } else if (listOf(
+                "book",
+                "novel",
+                "fiction",
+                "nonfiction",
+                "textbook",
+                "comic",
+                "mysterybook",
+                "biographies",
+                "selfhelpbook",
+                "mangabook",
+                "academicbook",
+                "engineeringbook",
+                "medicalbook",
+                "businessbook",
+                "literaturebooks"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("books")
-        } else if (listOf("engineeringnote", "note", "lecturematerial", "studyresource", "mechanicalnote", "electricalnote", "civilnote", "computersciencenote", "itnote", "electronicnote", "chemicalnote", "physicsnote", "mathematicsnote", "aeronote", "biotechnotes").any { text.contains(it) }) {
+        } else if (listOf(
+                "engineeringnote",
+                "note",
+                "lecturematerial",
+                "studyresource",
+                "mechanicalnote",
+                "electricalnote",
+                "civilnote",
+                "computersciencenote",
+                "itnote",
+                "electronicnote",
+                "chemicalnote",
+                "physicsnote",
+                "mathematicsnote",
+                "aeronote",
+                "biotechnotes"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("engineeringnotes")
-        } else if (listOf("tablet", "ipad", "samsungtablet", "androidtablet", "lenovotablet", "huaweitablet", "realmetablet", "mixtablet", "delltablet", "windowsurface", "kindle", "firetablet", "tab", "chrometablet", "asuszenpad", "teclasttablet").any { text.contains(it) }) {
+        } else if (listOf(
+                "tablet",
+                "ipad",
+                "samsungtablet",
+                "androidtablet",
+                "lenovotablet",
+                "huaweitablet",
+                "realmetablet",
+                "mixtablet",
+                "delltablet",
+                "windowsurface",
+                "kindle",
+                "firetablet",
+                "tab",
+                "chrometablet",
+                "asuszenpad",
+                "teclasttablet"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("tablets")
-        } else if (listOf("charger", "fastcharger", "wirelesscharger", "typeccharger", "iphonecharger", "samsungcharger", "redmicharger", "onepluscharger", "oppocharger", "vivotypec", "realmecharger", "laptopcharger", "macbookcharger", "ankercharger", "belkincharger").any { text.contains(it) }) {
+        } else if (listOf(
+                "charger",
+                "fastcharger",
+                "wirelesscharger",
+                "typeccharger",
+                "iphonecharger",
+                "samsungcharger",
+                "redmicharger",
+                "onepluscharger",
+                "oppocharger",
+                "vivotypec",
+                "realmecharger",
+                "laptopcharger",
+                "macbookcharger",
+                "ankercharger",
+                "belkincharger"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("chargers")
-        } else if (listOf("powerbank", "mi powerbank", "redmipowerbank", "samsungpowerbank", "onepluspowerbank", "realmepowerbank", "ankerpowerbank", "ambrane", "energizerpowerbank", "duracellpowerbank", "asuspowerbank", "oppo_powerbank", "vivopowerbank", "infinixpowerbank", "huawei_powerbank", "magsafepowerbank").any { text.contains(it) }) {
+        } else if (listOf(
+                "powerbank",
+                "mi powerbank",
+                "redmipowerbank",
+                "samsungpowerbank",
+                "onepluspowerbank",
+                "realmepowerbank",
+                "ankerpowerbank",
+                "ambrane",
+                "energizerpowerbank",
+                "duracellpowerbank",
+                "asuspowerbank",
+                "oppo_powerbank",
+                "vivopowerbank",
+                "infinixpowerbank",
+                "huawei_powerbank",
+                "magsafepowerbank"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("powerbanks")
-        } else if (listOf("keyboard", "mechanicalkeyboard", "wirelesskeyboard", "bluetoothkeyboard", "logitechkeyboard", "razerkeyboard", "corsairkeyboard", "applekeyboard", "microsoftkeyboard", "dellkeyboard", "hpkeyboard", "redragonkeyboard", "steelserieskeyboard", "gamingkeyboard", "rgbkeyboard", "membranekeyboard").any { text.contains(it) }) {
+        } else if (listOf(
+                "keyboard",
+                "mechanicalkeyboard",
+                "wirelesskeyboard",
+                "bluetoothkeyboard",
+                "logitechkeyboard",
+                "razerkeyboard",
+                "corsairkeyboard",
+                "applekeyboard",
+                "microsoftkeyboard",
+                "dellkeyboard",
+                "hpkeyboard",
+                "redragonkeyboard",
+                "steelserieskeyboard",
+                "gamingkeyboard",
+                "rgbkeyboard",
+                "membranekeyboard"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("keyboards")
-        } else if (listOf("calculator", "scientificcalculator", "casiocalculator", "texasinstrument", "basiccalculator", "graphingcalculator", "fx991ex", "fx991m", "hpcalculator", "sharp_calculator", "engineeringcalculator", "financialcalculator", "programmablecalculator", "deskcalculator", "solarcalculator", "mini_calculator").any { text.contains(it) }) {
+        } else if (listOf(
+                "calculator",
+                "scientificcalculator",
+                "casiocalculator",
+                "texasinstrument",
+                "basiccalculator",
+                "graphingcalculator",
+                "fx991ex",
+                "fx991m",
+                "hpcalculator",
+                "sharp_calculator",
+                "engineeringcalculator",
+                "financialcalculator",
+                "programmablecalculator",
+                "deskcalculator",
+                "solarcalculator",
+                "mini_calculator"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("calculators")
-        } else if (listOf("backpack", "schoolbag", "laptopbag", "travelbackpack", "hikingbackpack", "trekkingbag", "collegebag", "rucksack", "dufflebag", "daypack", "samsonitebackpack", "wildcraftbackpack", "fastrackbackpack", "nikebackpack", "adidasbackpack").any { text.contains(it) }) {
+        } else if (listOf(
+                "backpack",
+                "schoolbag",
+                "laptopbag",
+                "travelbackpack",
+                "hikingbackpack",
+                "trekkingbag",
+                "collegebag",
+                "rucksack",
+                "dufflebag",
+                "daypack",
+                "samsonitebackpack",
+                "wildcraftbackpack",
+                "fastrackbackpack",
+                "nikebackpack",
+                "adidasbackpack"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("backpacks")
-        } else if (listOf("furnituredesksandchair", "desk", "officedesk", "sturdytable", "woodendesk", "computertable", "studytable", "workstation", "ergonomicchair", "gamingchair", "revolvingchair", "executivechair", "foldingchair", "plasticchair", "woodenchair", "adjustablechair").any { text.contains(it) }) {
+        } else if (listOf(
+                "furnituredesksandchair",
+                "desk",
+                "officedesk",
+                "sturdytable",
+                "woodendesk",
+                "computertable",
+                "studytable",
+                "workstation",
+                "ergonomicchair",
+                "gamingchair",
+                "revolvingchair",
+                "executivechair",
+                "foldingchair",
+                "plasticchair",
+                "woodenchair",
+                "adjustablechair"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("furnituredesksandchairs")
-        } else if (listOf("mattress", "memoryfoam", "orthopedicmattress", "springmattress", "latexfoam", "singlemattress", "doublemattress", "queenmattres", "kingmattres", "cottonmattres", "foldablemattres", "sleepwell", "tempur", "duroflex", "pepsmattres", "kurlon").any { text.contains(it) }) {
+        } else if (listOf(
+                "mattress",
+                "memoryfoam",
+                "orthopedicmattress",
+                "springmattress",
+                "latexfoam",
+                "singlemattress",
+                "doublemattress",
+                "queenmattres",
+                "kingmattres",
+                "cottonmattres",
+                "foldablemattres",
+                "sleepwell",
+                "tempur",
+                "duroflex",
+                "pepsmattres",
+                "kurlon"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("mattresses")
-        } else if (listOf("roomdecor", "homedecor", "wallart", "poster", "fairylight", "stringlight", "ledlight", "photoframe", "wallsticker", "tablelamp", "candle", "clock", "showpiece", "artificialplant", "cushions").any { text.contains(it) }) {
+        } else if (listOf(
+                "roomdecor",
+                "homedecor",
+                "wallart",
+                "poster",
+                "fairylight",
+                "stringlight",
+                "ledlight",
+                "photoframe",
+                "wallsticker",
+                "tablelamp",
+                "candle",
+                "clock",
+                "showpiece",
+                "artificialplant",
+                "cushions"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("room_decor")
-        } else if (listOf("sportsequipment", "badmintonracket", "cricketbat", "football", "basketball", "volleyball", "tennisracket", "hockeystick", "tabletennisset", "gymdumbbell", "kettlebell", "yogamat", "skippingrope", "boxingglove", "resistanceband", "cyclinghelmet").any { text.contains(it) }) {
+        } else if (listOf(
+                "sportsequipment",
+                "badmintonracket",
+                "cricketbat",
+                "football",
+                "basketball",
+                "volleyball",
+                "tennisracket",
+                "hockeystick",
+                "tabletennisset",
+                "gymdumbbell",
+                "kettlebell",
+                "yogamat",
+                "skippingrope",
+                "boxingglove",
+                "resistanceband",
+                "cyclinghelmet"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("sportsequipment")
-        } else if (listOf("bicycle", "mountainbike", "roadbike", "hybridbike", "electricbike", "foldingbike", "bmx", "gearcycle", "racerbike", "citybike", "herocycle", "atlascycle", "firefoxbike", "giantbike", "meridabike").any { text.contains(it) }) {
+        } else if (listOf(
+                "bicycle",
+                "mountainbike",
+                "roadbike",
+                "hybridbike",
+                "electricbike",
+                "foldingbike",
+                "bmx",
+                "gearcycle",
+                "racerbike",
+                "citybike",
+                "herocycle",
+                "atlascycle",
+                "firefoxbike",
+                "giantbike",
+                "meridabike"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("bicycles")
-        } else if (listOf("printeraccessorie", "printercartridge", "toner", "inkrefill", "lasertoner", "printerpaper", "photopaper", "printercable", "inkjetcartridge", "hpprinterink", "epsonink", "canonink", "brotherprinterink", "thermalpaper", "printerhead", "printerrollers").any { text.contains(it) }) {
+        } else if (listOf(
+                "printeraccessorie",
+                "printercartridge",
+                "toner",
+                "inkrefill",
+                "lasertoner",
+                "printerpaper",
+                "photopaper",
+                "printercable",
+                "inkjetcartridge",
+                "hpprinterink",
+                "epsonink",
+                "canonink",
+                "brotherprinterink",
+                "thermalpaper",
+                "printerhead",
+                "printerrollers"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("printeraccessories")
-        } else if (listOf("stationery", "notebook", "pen", "diary", "journal", "gelpen", "ballpen", "fountainpen", "mechanicalpencil", "sketchbook", "highlighter", "eraser", "sharpener", "stickynote", "markers").any { text.contains(it) }) {
+        } else if (listOf(
+                "stationery",
+                "notebook",
+                "pen",
+                "diary",
+                "journal",
+                "gelpen",
+                "ballpen",
+                "fountainpen",
+                "mechanicalpencil",
+                "sketchbook",
+                "highlighter",
+                "eraser",
+                "sharpener",
+                "stickynote",
+                "markers"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("stationary")
-        } else if (listOf("softwarelicense", "windowslicense", "msofficelicense", "adobecc", "photoshoplicense", "autocadlicense", "microsoft365", "antiviruslicense", "vpnsubscription", "zoompro", "cloudstorage", "spotifypremium", "netflixsubscription", "steamkey", "playstoregiftcard", "itunesgiftcard").any { text.contains(it) }) {
+        } else if (listOf(
+                "softwarelicense",
+                "windowslicense",
+                "msofficelicense",
+                "adobecc",
+                "photoshoplicense",
+                "autocadlicense",
+                "microsoft365",
+                "antiviruslicense",
+                "vpnsubscription",
+                "zoompro",
+                "cloudstorage",
+                "spotifypremium",
+                "netflixsubscription",
+                "steamkey",
+                "playstoregiftcard",
+                "itunesgiftcard"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("softwarelicense")
-        } else if (listOf("projector", "miniprojector", "hdprojector", "4kprojector", "homecinema", "officemultimedia", "epsonprojector", "benqprojector", "viewsonicprojector", "sonyprojector", "lgprojector", "ankerprojector", "pico_projector", "laserprojector", "wirelessprojector").any { text.contains(it) }) {
+        } else if (listOf(
+                "projector",
+                "miniprojector",
+                "hdprojector",
+                "4kprojector",
+                "homecinema",
+                "officemultimedia",
+                "epsonprojector",
+                "benqprojector",
+                "viewsonicprojector",
+                "sonyprojector",
+                "lgprojector",
+                "ankerprojector",
+                "pico_projector",
+                "laserprojector",
+                "wirelessprojector"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("projectors")
-        } else if (listOf("monitor", "gamingmonitor", "curvedmonitor", "ledmonitor", "ipsmonitor", "144hzmonitor", "ultrawidemonitor", "4kmonitor", "asusmonitor", "lgmonitor", "samsungmonitor", "dellmonitor", "benqmonitor", "acerpredator", "hpmonitor", "viewsonicmonitor").any { text.contains(it) }) {
+        } else if (listOf(
+                "monitor",
+                "gamingmonitor",
+                "curvedmonitor",
+                "ledmonitor",
+                "ipsmonitor",
+                "144hzmonitor",
+                "ultrawidemonitor",
+                "4kmonitor",
+                "asusmonitor",
+                "lgmonitor",
+                "samsungmonitor",
+                "dellmonitor",
+                "benqmonitor",
+                "acerpredator",
+                "hpmonitor",
+                "viewsonicmonitor"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("monitors")
-        } else if (listOf("harddrive", "externalhdd", "portablehdd", "internalhdd", "seagatehdd", "wdhdd", "toshibahdd", "samsunghdd", "1tbhdd", "2tbhdd", "laptophdd", "desktophdd", "surveillancehdd", "gaminghdd", "raidstorage").any { text.contains(it) }) {
+        } else if (listOf(
+                "harddrive",
+                "externalhdd",
+                "portablehdd",
+                "internalhdd",
+                "seagatehdd",
+                "wdhdd",
+                "toshibahdd",
+                "samsunghdd",
+                "1tbhdd",
+                "2tbhdd",
+                "laptophdd",
+                "desktophdd",
+                "surveillancehdd",
+                "gaminghdd",
+                "raidstorage"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("harddrives")
-        } else if (listOf("flashdrive", "usbflashdrive", "pen_drive", "otgpendrive", "typecpdrive", "sandiskpendrive", "kingstonpendrive", "hpflashdrive", "toshibaflashdrive", "sonyflashdrive", "samsungpendrive", "32gbpendrive", "64gbpendrive", "128gbpendrive", "encryptedpendrive").any { text.contains(it) }) {
+        } else if (listOf(
+                "flashdrive",
+                "usbflashdrive",
+                "pen_drive",
+                "otgpendrive",
+                "typecpdrive",
+                "sandiskpendrive",
+                "kingstonpendrive",
+                "hpflashdrive",
+                "toshibaflashdrive",
+                "sonyflashdrive",
+                "samsungpendrive",
+                "32gbpendrive",
+                "64gbpendrive",
+                "128gbpendrive",
+                "encryptedpendrive"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("flashdrives")
-        } else if (listOf("gamingconsole", "ps5", "ps4", "xboxseriesx", "xboxseriesS", "nintendoswitch", "steamdeck", "gaminghandheld", "nintendo", "playstation", "xboxone", "retrogamingconsole", "gamingpc", "vrgaming", "arcadeconsole", "nvidiashield", "segamegadrive").any { text.contains(it) }) {
+        } else if (listOf(
+                "gamingconsole",
+                "ps5",
+                "ps4",
+                "xboxseriesx",
+                "xboxseriesS",
+                "nintendoswitch",
+                "steamdeck",
+                "gaminghandheld",
+                "nintendo",
+                "playstation",
+                "xboxone",
+                "retrogamingconsole",
+                "gamingpc",
+                "vrgaming",
+                "arcadeconsole",
+                "nvidiashield",
+                "segamegadrive"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("gamingconsoles")
-        } else if (listOf("boardgame", "ches", "monopoly", "scrabble", "carrom", "riskgame", "ludo", "clueboardgame", "catan", "dungeonsanddragon", "uno", "jenga", "codename", "connect4", "battleship", "tickettoride").any { text.contains(it) }) {
+        } else if (listOf(
+                "boardgame",
+                "ches",
+                "monopoly",
+                "scrabble",
+                "carrom",
+                "riskgame",
+                "ludo",
+                "clueboardgame",
+                "catan",
+                "dungeonsanddragon",
+                "uno",
+                "jenga",
+                "codename",
+                "connect4",
+                "battleship",
+                "tickettoride"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("board_games")
-        } else if (listOf("artsupply", "paintbrush", "acrylicpaints", "watercolor", "oilpaint", "canvasboard", "sketchpencil", "charcoalpencil", "coloredpencil", "pastelcolor", "marker", "calligraphyset", "easel", "paletteknife", "drawingpaper", "sculptingtools", "art", "brushes", "brush", "acrylic").any { text.contains(it) }) {
+        } else if (listOf(
+                "artsupply",
+                "paintbrush",
+                "acrylicpaints",
+                "watercolor",
+                "oilpaint",
+                "canvasboard",
+                "sketchpencil",
+                "charcoalpencil",
+                "coloredpencil",
+                "pastelcolor",
+                "marker",
+                "calligraphyset",
+                "easel",
+                "paletteknife",
+                "drawingpaper",
+                "sculptingtools",
+                "art",
+                "brushes",
+                "brush",
+                "acrylic"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("artsupplies")
-        } else if (listOf("sewingmachine", "stitchingmachine", "tailoringmachine", "handheldsewingmachine", "electricsewingmachine", "mechanicalsewingmachine", "embroiderymachine", "brothersewingmachine", "singersewingmachine", "janomesewingmachine", "berninasm", "sewingkit", "overlockmachine", "quiltingmachine", "zigzagsewingmachine").any { text.contains(it) }) {
+        } else if (listOf(
+                "sewingmachine",
+                "stitchingmachine",
+                "tailoringmachine",
+                "handheldsewingmachine",
+                "electricsewingmachine",
+                "mechanicalsewingmachine",
+                "embroiderymachine",
+                "brothersewingmachine",
+                "singersewingmachine",
+                "janomesewingmachine",
+                "berninasm",
+                "sewingkit",
+                "overlockmachine",
+                "quiltingmachine",
+                "zigzagsewingmachine"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("sewingmachines")
-        } else if (listOf("kitchenappliance", "blender", "mixergrinder", "foodprocessor", "microwaveoven", "toaster", "inductionstove", "airfryer", "pressurecooker", "electrickettle", "coffeemaker", "ricecooker", "juicer", "dishwasher", "handmixer", "sandwichmaker").any { text.contains(it) }) {
+        } else if (listOf(
+                "kitchenappliance",
+                "blender",
+                "mixergrinder",
+                "foodprocessor",
+                "microwaveoven",
+                "toaster",
+                "inductionstove",
+                "airfryer",
+                "pressurecooker",
+                "electrickettle",
+                "coffeemaker",
+                "ricecooker",
+                "juicer",
+                "dishwasher",
+                "handmixer",
+                "sandwichmaker"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("kitchenappliances")
-        } else if (listOf("lamp", "tablelamp", "studytablelamp", "ledlamp", "readinglamp", "nightlamp", "floorlamp", "desklamp", "bedsidelamp", "cliponlamp", "touchlamp", "adjustablelamp", "decorativelamp", "fairylightslamp", "solarledlamp").any { text.contains(it) }) {
+        } else if (listOf(
+                "lamp",
+                "tablelamp",
+                "studytablelamp",
+                "ledlamp",
+                "readinglamp",
+                "nightlamp",
+                "floorlamp",
+                "desklamp",
+                "bedsidelamp",
+                "cliponlamp",
+                "touchlamp",
+                "adjustablelamp",
+                "decorativelamp",
+                "fairylightslamp",
+                "solarledlamp"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("lamps")
-        } else if (listOf("clock", "wallclock", "alarmclock", "digitalclock", "tableclock", "pendulumclock", "smartclock", "analogueclock", "decorativeclock", "ledclock", "projectionclock", "silentclock", "vintageclock", "atomicclock", "travelclock").any { text.contains(it) }) {
+        } else if (listOf(
+                "clock",
+                "wallclock",
+                "alarmclock",
+                "digitalclock",
+                "tableclock",
+                "pendulumclock",
+                "smartclock",
+                "analogueclock",
+                "decorativeclock",
+                "ledclock",
+                "projectionclock",
+                "silentclock",
+                "vintageclock",
+                "atomicclock",
+                "travelclock"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("clocks")
-        } else if (listOf("waterbottle", "thermosbottle", "stainlesssteelbottle", "plasticwaterbottle", "glasswaterbottle", "copperbottle", "hydrationbottle", "sportsbottle", "collapsiblebottle", "filteredwaterbottle", "sipperbottle", "infuserbottle", "bpakwaterbottle", "miltonbottle", "camelbakbottle", "nalgene").any { text.contains(it) }) {
+        } else if (listOf(
+                "waterbottle",
+                "thermosbottle",
+                "stainlesssteelbottle",
+                "plasticwaterbottle",
+                "glasswaterbottle",
+                "copperbottle",
+                "hydrationbottle",
+                "sportsbottle",
+                "collapsiblebottle",
+                "filteredwaterbottle",
+                "sipperbottle",
+                "infuserbottle",
+                "bpakwaterbottle",
+                "miltonbottle",
+                "camelbakbottle",
+                "nalgene"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("waterbottles")
-        } else if (listOf("labcoat", "whitecoat", "medicalcoat", "scientistcoat", "doctorcoat", "chemistcoat", "longlabcoat", "shortlabcoat", "cottonlabcoat", "polyesterlabcoat", "disposablelabcoat", "protectivelabcoat", "buttonedlabcoat", "zipperedlabcoat", "kidslabcoat").any { text.contains(it) }) {
+        } else if (listOf(
+                "labcoat",
+                "whitecoat",
+                "medicalcoat",
+                "scientistcoat",
+                "doctorcoat",
+                "chemistcoat",
+                "longlabcoat",
+                "shortlabcoat",
+                "cottonlabcoat",
+                "polyesterlabcoat",
+                "disposablelabcoat",
+                "protectivelabcoat",
+                "buttonedlabcoat",
+                "zipperedlabcoat",
+                "kidslabcoat"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("labcoats")
-        } else if (listOf("safetygoggle", "labgoggle", "chemistrygoggle", "protectivegoggle", "sciencegoggle", "uvprotectiongoggle", "splashresistantgoggle", "antifoggoggle", "medicalgoggle", "lasergoggle", "dustproofgoggle", "adjustablegoggle", "clearvisiongoggle", "industrialgoggle", "chemicalgoggles").any { text.contains(it) }) {
+        } else if (listOf(
+                "safetygoggle",
+                "labgoggle",
+                "chemistrygoggle",
+                "protectivegoggle",
+                "sciencegoggle",
+                "uvprotectiongoggle",
+                "splashresistantgoggle",
+                "antifoggoggle",
+                "medicalgoggle",
+                "lasergoggle",
+                "dustproofgoggle",
+                "adjustablegoggle",
+                "clearvisiongoggle",
+                "industrialgoggle",
+                "chemicalgoggles"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("safetygoggles")
-        } else if (listOf("graphingpaper", "mathgraphpaper", "engineeringgraphpaper", "millimeterpaper", "logarithmicgraphpaper", "isometricgraphpaper", "polargraphpaper", "gridpaper", "hexagonalgraphpaper", "blueprintgraphpaper", "coordinategraphpaper", "labgraphpaper", "handwritinggraphpaper", "quadruledpaper", "plaingraphpaper").any { text.contains(it) }) {
+        } else if (listOf(
+                "graphingpaper",
+                "mathgraphpaper",
+                "engineeringgraphpaper",
+                "millimeterpaper",
+                "logarithmicgraphpaper",
+                "isometricgraphpaper",
+                "polargraphpaper",
+                "gridpaper",
+                "hexagonalgraphpaper",
+                "blueprintgraphpaper",
+                "coordinategraphpaper",
+                "labgraphpaper",
+                "handwritinggraphpaper",
+                "quadruledpaper",
+                "plaingraphpaper"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("graphingpaper")
-        } else if (listOf("labequipment", "microscope", "compoundmicroscope", "stereomicroscope", "digitalmicroscope", "fluorescencemicroscope", "biologicalmicroscope", "electronmicroscope", "telescope", "centrifuge", "spectrometer", "testtube", "pipette", "beaker", "flask", "bunsenburner").any { text.contains(it) }) {
+        } else if (listOf(
+                "labequipment",
+                "microscope",
+                "compoundmicroscope",
+                "stereomicroscope",
+                "digitalmicroscope",
+                "fluorescencemicroscope",
+                "biologicalmicroscope",
+                "electronmicroscope",
+                "telescope",
+                "centrifuge",
+                "spectrometer",
+                "testtube",
+                "pipette",
+                "beaker",
+                "flask",
+                "bunsenburner"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("labequipment&microscopes")
-        } else if (listOf("literaturebook", "classicbook", "shakespearebook", "poetrybook", "englishliterature", "dickensbook", "janeaustenbook", "hemingwaybook", "tolkienbook", "orwellbook", "dostoevskybook", "victorianliterature", "modernistbook", "philosophybook", "historicalfiction").any { text.contains(it) }) {
+        } else if (listOf(
+                "literaturebook",
+                "classicbook",
+                "shakespearebook",
+                "poetrybook",
+                "englishliterature",
+                "dickensbook",
+                "janeaustenbook",
+                "hemingwaybook",
+                "tolkienbook",
+                "orwellbook",
+                "dostoevskybook",
+                "victorianliterature",
+                "modernistbook",
+                "philosophybook",
+                "historicalfiction"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("literaturebooks")
-        } else if (listOf("fictionnovel", "bestsellingfiction", "mysterynovel", "thrillernovel", "romanticnovel", "fantasynovel", "scifinovel", "youngadultnovel", "historicalfictionnovel", "horrornovel", "dystopianfiction", "graphicnovel", "literaryfiction", "adventurenovel", "crimefiction").any { text.contains(it) }) {
+        } else if (listOf(
+                "fictionnovel",
+                "bestsellingfiction",
+                "mysterynovel",
+                "thrillernovel",
+                "romanticnovel",
+                "fantasynovel",
+                "scifinovel",
+                "youngadultnovel",
+                "historicalfictionnovel",
+                "horrornovel",
+                "dystopianfiction",
+                "graphicnovel",
+                "literaryfiction",
+                "adventurenovel",
+                "crimefiction"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("fictionnovels")
-        } else if (listOf("journal", "diarynotebook", "bulletjournal", "traveljournal", "studyjournal", "gratitudejournal", "linedjournal", "dotgridjournal", "plannerjournal", "sketchjournal", "hardcoverjournal", "softcoverjournal", "recycledpaperjournal", "goalsettingjournal", "spiraljournal").any { text.contains(it) }) {
+        } else if (listOf(
+                "journal",
+                "diarynotebook",
+                "bulletjournal",
+                "traveljournal",
+                "studyjournal",
+                "gratitudejournal",
+                "linedjournal",
+                "dotgridjournal",
+                "plannerjournal",
+                "sketchjournal",
+                "hardcoverjournal",
+                "softcoverjournal",
+                "recycledpaperjournal",
+                "goalsettingjournal",
+                "spiraljournal"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("journals")
-        } else if (listOf("ereader", "kindle", "kindlepaperwhite", "kindleoasi", "kindlescribe", "nook", "koboreader", "sonyereader", "pocketbookereader", "inkpadereader", "touchscreenereader", "pdfereader", "comicereader", "waterproofereader", "einkreader", "tabletforreading").any { text.contains(it) }) {
+        } else if (listOf(
+                "ereader",
+                "kindle",
+                "kindlepaperwhite",
+                "kindleoasi",
+                "kindlescribe",
+                "nook",
+                "koboreader",
+                "sonyereader",
+                "pocketbookereader",
+                "inkpadereader",
+                "touchscreenereader",
+                "pdfereader",
+                "comicereader",
+                "waterproofereader",
+                "einkreader",
+                "tabletforreading"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("ereaders")
-        } else if (listOf("poster", "dormposter", "studyroomposter", "motivationalposter", "animeposter", "gamingposter", "sportsstarposter", "celebrityposter", "wallartposter", "movieposter", "aestheticposter", "minimalistposter", "musicbandposter", "comicposter", "abstractartposters").any { text.contains(it) }) {
+        } else if (listOf(
+                "poster",
+                "dormposter",
+                "studyroomposter",
+                "motivationalposter",
+                "animeposter",
+                "gamingposter",
+                "sportsstarposter",
+                "celebrityposter",
+                "wallartposter",
+                "movieposter",
+                "aestheticposter",
+                "minimalistposter",
+                "musicbandposter",
+                "comicposter",
+                "abstractartposters"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("posters(fordormhostelsrooms,studyspaces)")
-        } else if (listOf("planner", "studynotebook", "assignmentplanner", "projectplanner", "dailyplanner", "weeklyplanner", "monthlyplanner", "academicplanner", "goaltracker", "todolist", "journalplanner", "productivityplanner", "habittracker", "bulletjournal", "digitalplanner", "timeblockplanner").any { text.contains(it) }) {
+        } else if (listOf(
+                "planner",
+                "studynotebook",
+                "assignmentplanner",
+                "projectplanner",
+                "dailyplanner",
+                "weeklyplanner",
+                "monthlyplanner",
+                "academicplanner",
+                "goaltracker",
+                "todolist",
+                "journalplanner",
+                "productivityplanner",
+                "habittracker",
+                "bulletjournal",
+                "digitalplanner",
+                "timeblockplanner"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("planners(forstudy,assignments,projects)")
-        } else if (listOf("coffeemaker", "espresso", "frenchpres", "dripcoffeemaker", "nespresso", "keurig", "aeropres", "coldbrewmaker", "moka", "pour-overcoffeemaker", "siphoncoffeemaker", "capsulecoffeemachine", "single-servecoffeemaker", "thermalcoffeemaker", "manualcoffeemaker").any { text.contains(it) }) {
+        } else if (listOf(
+                "coffeemaker",
+                "espresso",
+                "frenchpres",
+                "dripcoffeemaker",
+                "nespresso",
+                "keurig",
+                "aeropres",
+                "coldbrewmaker",
+                "moka",
+                "pour-overcoffeemaker",
+                "siphoncoffeemaker",
+                "capsulecoffeemachine",
+                "single-servecoffeemaker",
+                "thermalcoffeemaker",
+                "manualcoffeemaker"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("coffeemakers(forlate-nightstudying&hustlemode)")
-        } else if (listOf("curtain", "windowcurtain", "blackoutcurtain", "sheercurtain", "thermalcurtain", "soundproofcurtain", "printedcurtain", "velvetcurtain", "cottoncurtain", "polyestercurtain", "lincurtain", "grommetcurtain", "rodpocketcurtain", "tabtopcurtain", "pleatedcurtains").any { text.contains(it) }) {
+        } else if (listOf(
+                "curtain",
+                "windowcurtain",
+                "blackoutcurtain",
+                "sheercurtain",
+                "thermalcurtain",
+                "soundproofcurtain",
+                "printedcurtain",
+                "velvetcurtain",
+                "cottoncurtain",
+                "polyestercurtain",
+                "lincurtain",
+                "grommetcurtain",
+                "rodpocketcurtain",
+                "tabtopcurtain",
+                "pleatedcurtains"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("curtains")
-        } else if (listOf("bedsheet", "cottonbedsheet", "kingbedsheet", "queenbedsheet", "singlebedsheet", "microfiberbedsheet", "silkbedsheet", "flannelbedsheet", "hotelstylebedsheet", "printedbedsheet", "fittedbedsheet", "bamboo-fabricbedsheet", "satinbedsheet", "organiccottonbedsheet", "coolingbedsheets").any { text.contains(it) }) {
+        } else if (listOf(
+                "bedsheet",
+                "cottonbedsheet",
+                "kingbedsheet",
+                "queenbedsheet",
+                "singlebedsheet",
+                "microfiberbedsheet",
+                "silkbedsheet",
+                "flannelbedsheet",
+                "hotelstylebedsheet",
+                "printedbedsheet",
+                "fittedbedsheet",
+                "bamboo-fabricbedsheet",
+                "satinbedsheet",
+                "organiccottonbedsheet",
+                "coolingbedsheets"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("bedsheets")
-        } else if (listOf("pillow", "memoryfoampillow", "orthopedicpillow", "featherpillow", "downpillow", "bodypillow", "coolingpillow", "cottonpillow", "necksupportpillow", "travelpillow", "lumbarpillow", "pregnancypillow", "hypoallergenicpillow", "latexfoam-pillow", "gelinfusedpillow", "sleepingpillow").any { text.contains(it) }) {
+        } else if (listOf(
+                "pillow",
+                "memoryfoampillow",
+                "orthopedicpillow",
+                "featherpillow",
+                "downpillow",
+                "bodypillow",
+                "coolingpillow",
+                "cottonpillow",
+                "necksupportpillow",
+                "travelpillow",
+                "lumbarpillow",
+                "pregnancypillow",
+                "hypoallergenicpillow",
+                "latexfoam-pillow",
+                "gelinfusedpillow",
+                "sleepingpillow"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("pillows")
-        } else if (listOf("rug", "arearug", "bedroomrug", "carpetrug", "woolrug", "cottonrug", "juterug", "shagrug", "turkishrug", "modernrug", "traditionalrug", "kilimrug", "handwovenrug", "silkrug", "outdoorrug", "printedrug").any { text.contains(it) }) {
+        } else if (listOf(
+                "rug",
+                "arearug",
+                "bedroomrug",
+                "carpetrug",
+                "woolrug",
+                "cottonrug",
+                "juterug",
+                "shagrug",
+                "turkishrug",
+                "modernrug",
+                "traditionalrug",
+                "kilimrug",
+                "handwovenrug",
+                "silkrug",
+                "outdoorrug",
+                "printedrug"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("rugs")
-        } else if (listOf("fan", "tablefan", "ceilingfan", "pedestalfan", "exhaustfan", "towerfan", "bladelessfan", "personaldeskfan", "oscillatingfan", "industrialfan", "minifan", "wallmountfan", "handheldfan", "usbfan", "coolingfan", "dcceilingfan").any { text.contains(it) }) {
+        } else if (listOf(
+                "fan",
+                "tablefan",
+                "ceilingfan",
+                "pedestalfan",
+                "exhaustfan",
+                "towerfan",
+                "bladelessfan",
+                "personaldeskfan",
+                "oscillatingfan",
+                "industrialfan",
+                "minifan",
+                "wallmountfan",
+                "handheldfan",
+                "usbfan",
+                "coolingfan",
+                "dcceilingfan"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("fans")
-        } else if (listOf("umbrella", "foldingumbrella", "compactumbrella", "golfumbrella", "automaticumbrella", "windproofumbrella", "transparentumbrella", "stickumbrella", "travelumbrella", "largeumbrella", "bubbleumbrella", "kidsumbrella", "reversefoldingumbrella", "uvprotectionumbrella", "fashionumbrella", "rainumbrella").any { text.contains(it) }) {
+        } else if (listOf(
+                "umbrella",
+                "foldingumbrella",
+                "compactumbrella",
+                "golfumbrella",
+                "automaticumbrella",
+                "windproofumbrella",
+                "transparentumbrella",
+                "stickumbrella",
+                "travelumbrella",
+                "largeumbrella",
+                "bubbleumbrella",
+                "kidsumbrella",
+                "reversefoldingumbrella",
+                "uvprotectionumbrella",
+                "fashionumbrella",
+                "rainumbrella"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("umbrellas")
-        } else if (listOf("raincoat", "ponchoraincoat", "longraincoat", "waterproofjacket", "trenchraincoat", "hoodedraincoat", "plasticraincoat", "disposableraincoat", "packableraincoat", "lightweightcoat", "reflectiveraincoat", "fashionraincoat", "transparentraincoat", "kidsraincoat", "cyclingraincoat", "hikingraincoat").any { text.contains(it) }) {
+        } else if (listOf(
+                "raincoat",
+                "ponchoraincoat",
+                "longraincoat",
+                "waterproofjacket",
+                "trenchraincoat",
+                "hoodedraincoat",
+                "plasticraincoat",
+                "disposableraincoat",
+                "packableraincoat",
+                "lightweightcoat",
+                "reflectiveraincoat",
+                "fashionraincoat",
+                "transparentraincoat",
+                "kidsraincoat",
+                "cyclingraincoat",
+                "hikingraincoat"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("raincoats")
-        } else if (listOf("shoe", "shoes", "sneaker", "formal", "casualshoe", "loafer", "boot", "derbyshoe", "oxfordshoe", "running-shoe", "training-shoe", "basketballshoe", "trekkingshoe", "high-topshoe", "sliponshoe", "canvas-shoe", "leathershoes").any { text.contains(it) }) {
+        } else if (listOf(
+                "shoe",
+                "shoes",
+                "sneaker",
+                "formal",
+                "casualshoe",
+                "loafer",
+                "boot",
+                "derbyshoe",
+                "oxfordshoe",
+                "running-shoe",
+                "training-shoe",
+                "basketballshoe",
+                "trekkingshoe",
+                "high-topshoe",
+                "sliponshoe",
+                "canvas-shoe",
+                "leathershoes"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("fashionshoes")
-        } else if (listOf("sportsjersey", "footballjersey", "basketballjersey", "cricketjersey", "soccerjersey", "baseballjersey", "rugbeyjersey", "cyclingjersey", "athleticsjersey", "customteamjersey", "fansupportjersey", "gymwearjersey", "hockeyjersey", "badmintonjersey", "tennisjersey").any { text.contains(it) }) {
+        } else if (listOf(
+                "sportsjersey",
+                "footballjersey",
+                "basketballjersey",
+                "cricketjersey",
+                "soccerjersey",
+                "baseballjersey",
+                "rugbeyjersey",
+                "cyclingjersey",
+                "athleticsjersey",
+                "customteamjersey",
+                "fansupportjersey",
+                "gymwearjersey",
+                "hockeyjersey",
+                "badmintonjersey",
+                "tennisjersey"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("sportsjerseys")
-        } else if (listOf("dumbbells", "hexagonaldumbbell", "adjustabledumbbell", "fixedweightdumbbell", "rubbercoateddumbbell", "neoprenedumbbell", "metallicdumbbell", "lightweightdumbbell", "gymdumbbell", "aerobicdumbbell", "heavyduty-dumbbell", "castirondumbbell", "vinylcoateddumbbell", "beginnersdumbbell", "strengthtrainingdumbbell", "proweightdumbbells").any { text.contains(it) }) {
+        } else if (listOf(
+                "dumbbells",
+                "hexagonaldumbbell",
+                "adjustabledumbbell",
+                "fixedweightdumbbell",
+                "rubbercoateddumbbell",
+                "neoprenedumbbell",
+                "metallicdumbbell",
+                "lightweightdumbbell",
+                "gymdumbbell",
+                "aerobicdumbbell",
+                "heavyduty-dumbbell",
+                "castirondumbbell",
+                "vinylcoateddumbbell",
+                "beginnersdumbbell",
+                "strengthtrainingdumbbell",
+                "proweightdumbbells"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("dumbbells")
-        } else if (listOf("yogamat", "non-slipyogamat", "eco-friendlyyogamat", "tpeyogamat", "pvcfreeyogamat", "cottonyogamat", "microfiberyogamat", "lightweightyogamat", "thickyogamat", "travel-friendlyyogamat", "bamboo-yogamat", "proyogamat", "corkyogamat", "foldableyogamat", "doublelayeryogamat", "suedeyogamat").any { text.contains(it) }) {
+        } else if (listOf(
+                "yogamat",
+                "non-slipyogamat",
+                "eco-friendlyyogamat",
+                "tpeyogamat",
+                "pvcfreeyogamat",
+                "cottonyogamat",
+                "microfiberyogamat",
+                "lightweightyogamat",
+                "thickyogamat",
+                "travel-friendlyyogamat",
+                "bamboo-yogamat",
+                "proyogamat",
+                "corkyogamat",
+                "foldableyogamat",
+                "doublelayeryogamat",
+                "suedeyogamat"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("yogamats")
-        } else if (listOf("helmet", "motorcyclehelmet", "bicyclehelmet", "scooterhelmet", "fullfacehelmet", "half-facehelmet", "modularhelmet", "offroadhelmet", "openfacehelmet", "carbonfiberhelmet", "dotcertifiedhelmet", "dual-sporthelmet", "safetyhelmet", "racinghelmet", "smarthelmet", "customgraphichelmet").any { text.contains(it) }) {
+        } else if (listOf(
+                "helmet",
+                "motorcyclehelmet",
+                "bicyclehelmet",
+                "scooterhelmet",
+                "fullfacehelmet",
+                "half-facehelmet",
+                "modularhelmet",
+                "offroadhelmet",
+                "openfacehelmet",
+                "carbonfiberhelmet",
+                "dotcertifiedhelmet",
+                "dual-sporthelmet",
+                "safetyhelmet",
+                "racinghelmet",
+                "smarthelmet",
+                "customgraphichelmet"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("helmets")
-        } else if (listOf("skateboard", "longboard", "cruiserboard", "pennyskateboard", "electricskateboard", "miniskateboard", "freestyleskateboard", "doublekickskateboard", "dropthroughskateboard", "downhillskateboard", "streetboard", "offroadskateboard", "bambooskateboard", "fiberglassskateboard", "customskateboard", "proskateboard").any { text.contains(it) }) {
+        } else if (listOf(
+                "skateboard",
+                "longboard",
+                "cruiserboard",
+                "pennyskateboard",
+                "electricskateboard",
+                "miniskateboard",
+                "freestyleskateboard",
+                "doublekickskateboard",
+                "dropthroughskateboard",
+                "downhillskateboard",
+                "streetboard",
+                "offroadskateboard",
+                "bambooskateboard",
+                "fiberglassskateboard",
+                "customskateboard",
+                "proskateboard"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("skateboards")
-        } else if (listOf("makeupkit", "beautyset", "cosmeticset", "foundationkit", "lipstickset", "eyeshadowpalette", "contourkit", "highlighterkit", "blushpalette", "makeupbrushe", "fullfacekit", "professionalmakeupkit", "bridalmakeupkit", "compactmakeupset", "travelmakeupkit", "waterproofmakeupkit").any { text.contains(it) }) {
+        } else if (listOf(
+                "makeupkit",
+                "beautyset",
+                "cosmeticset",
+                "foundationkit",
+                "lipstickset",
+                "eyeshadowpalette",
+                "contourkit",
+                "highlighterkit",
+                "blushpalette",
+                "makeupbrushe",
+                "fullfacekit",
+                "professionalmakeupkit",
+                "bridalmakeupkit",
+                "compactmakeupset",
+                "travelmakeupkit",
+                "waterproofmakeupkit"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("makeupkits")
-        } else if (listOf("hairdryer", "blowdryer", "ionicdryer", "salonhairdryer", "travelhairdryer", "compacthairdryer", "foldablehairdryer", "lightweighthairdryer", "ceramichairdryer", "turbohairdryer", "professioinalhairdryer", "cordedhairdryer", "cordlesshairdryer", "infraredhairdryer", "highspeedhairdryer", "low-noisehairdryer").any { text.contains(it) }) {
+        } else if (listOf(
+                "hairdryer",
+                "blowdryer",
+                "ionicdryer",
+                "salonhairdryer",
+                "travelhairdryer",
+                "compacthairdryer",
+                "foldablehairdryer",
+                "lightweighthairdryer",
+                "ceramichairdryer",
+                "turbohairdryer",
+                "professioinalhairdryer",
+                "cordedhairdryer",
+                "cordlesshairdryer",
+                "infraredhairdryer",
+                "highspeedhairdryer",
+                "low-noisehairdryer"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("hairdryers")
-        } else if (listOf("hairstraightener", "hairiron", "flatiron", "ceramichairstraightener", "titaniumhairstraightener", "wet-to-drystraightener", "ionicstraightener", "portablehairiron", "minihairstraightener", "cordlesshairstraightener", "infraredstraightener", "digitalhairstraightener", "salonhairstraightener", "professioinalhairstraightener", "widerplatehairiron", "steamhairstraightener").any { text.contains(it) }) {
+        } else if (listOf(
+                "hairstraightener",
+                "hairiron",
+                "flatiron",
+                "ceramichairstraightener",
+                "titaniumhairstraightener",
+                "wet-to-drystraightener",
+                "ionicstraightener",
+                "portablehairiron",
+                "minihairstraightener",
+                "cordlesshairstraightener",
+                "infraredstraightener",
+                "digitalhairstraightener",
+                "salonhairstraightener",
+                "professioinalhairstraightener",
+                "widerplatehairiron",
+                "steamhairstraightener"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("hairstraighteners")
-        } else if (listOf("wallet", "leatherwallet", "bifoldwallet", "trifoldwallet", "slimwallet", "moneyclipwallet", "rfidwallet", "zipperwallet", "cardholderwallet", "minimalistwallet", "travelwallet", "chainwallet", "fabricwallet", "coinpouchwallet", "sportswallet", "handmadewallet").any { text.contains(it) }) {
+        } else if (listOf(
+                "wallet",
+                "leatherwallet",
+                "bifoldwallet",
+                "trifoldwallet",
+                "slimwallet",
+                "moneyclipwallet",
+                "rfidwallet",
+                "zipperwallet",
+                "cardholderwallet",
+                "minimalistwallet",
+                "travelwallet",
+                "chainwallet",
+                "fabricwallet",
+                "coinpouchwallet",
+                "sportswallet",
+                "handmadewallet"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("wallets")
-        } else if (listOf("watch", "analogwatch", "digitalwatch", "smartwatch", "sportswatch", "diverwatch", "automaticwatch", "luxurywatch", "chronographwatch", "leatherstrapwatch", "metalstrapwatch", "rubberstrapwatch", "hybridwatch", "vintagewatch", "minimalistwatch", "titaniumwatch").any { text.contains(it) }) {
+        } else if (listOf(
+                "watch",
+                "analogwatch",
+                "digitalwatch",
+                "smartwatch",
+                "sportswatch",
+                "diverwatch",
+                "automaticwatch",
+                "luxurywatch",
+                "chronographwatch",
+                "leatherstrapwatch",
+                "metalstrapwatch",
+                "rubberstrapwatch",
+                "hybridwatch",
+                "vintagewatch",
+                "minimalistwatch",
+                "titaniumwatch"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("watches")
-        } else if (listOf("sunglass", "sunglasses", "aviatorsunglasse", "wayfarersunglasse", "polarizedsunglasse", "sportsunglasse", "mirrorsunglasse", "roundsunglasse", "cat-eyesunglasse", "oversizesunglasse", "retrosunglasse", "clip-onsunglasse", "photochromicsunglasse", "fashionablesunglasse", "outdoorsunglasse", "classicbrowlinesunglasse", "designerbrandedsunglasses").any { text.contains(it) }) {
+        } else if (listOf(
+                "sunglass",
+                "sunglasses",
+                "aviatorsunglasse",
+                "wayfarersunglasse",
+                "polarizedsunglasse",
+                "sportsunglasse",
+                "mirrorsunglasse",
+                "roundsunglasse",
+                "cat-eyesunglasse",
+                "oversizesunglasse",
+                "retrosunglasse",
+                "clip-onsunglasse",
+                "photochromicsunglasse",
+                "fashionablesunglasse",
+                "outdoorsunglasse",
+                "classicbrowlinesunglasse",
+                "designerbrandedsunglasses"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("sunglasses")
-        } else if (listOf("jewelry", "goldjewelry", "silverjewelry", "diamondjewelry", "fashionjewelry", "bracelet", "necklace", "ring", "earring", "anklet", "pendant", "choker", "gemstonejewelry", "customjewelry", "luxuryjewelry", "handmadejewelry").any { text.contains(it) }) {
+        } else if (listOf(
+                "jewelry",
+                "goldjewelry",
+                "silverjewelry",
+                "diamondjewelry",
+                "fashionjewelry",
+                "bracelet",
+                "necklace",
+                "ring",
+                "earring",
+                "anklet",
+                "pendant",
+                "choker",
+                "gemstonejewelry",
+                "customjewelry",
+                "luxuryjewelry",
+                "handmadejewelry"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("jewelry")
-        } else if (listOf("flashlight", "torchlight", "ledflashlight", "rechargeableflashlight", "solarflashlight", "tacticalflashlight", "miniflashlight", "waterproofflashlight", "headlampflashlight", "usbflashlight", "handheldflashlight", "emergencyflashlight", "zoomableflashlight", "campingflashlight", "highpowerflashlight").any { text.contains(it) }) {
+        } else if (listOf(
+                "flashlight",
+                "torchlight",
+                "ledflashlight",
+                "rechargeableflashlight",
+                "solarflashlight",
+                "tacticalflashlight",
+                "miniflashlight",
+                "waterproofflashlight",
+                "headlampflashlight",
+                "usbflashlight",
+                "handheldflashlight",
+                "emergencyflashlight",
+                "zoomableflashlight",
+                "campingflashlight",
+                "highpowerflashlight"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("flashlights")
-        } else if (listOf("toolkit", "handtoolkit", "mechanicstoolkit", "householdtoolkit", "precisiontoolkit", "powerdrillset", "screwdrivertoolkit", "plumbingtoolkit", "carrepairtoolkit", "multipurposetoolkit", "electricaltoolkit", "woodworkingtoolkit", "diytoolkit", "engineertoolkit", "compacttoolkit", "professionaltoolkit").any { text.contains(it) }) {
+        } else if (listOf(
+                "toolkit",
+                "handtoolkit",
+                "mechanicstoolkit",
+                "householdtoolkit",
+                "precisiontoolkit",
+                "powerdrillset",
+                "screwdrivertoolkit",
+                "plumbingtoolkit",
+                "carrepairtoolkit",
+                "multipurposetoolkit",
+                "electricaltoolkit",
+                "woodworkingtoolkit",
+                "diytoolkit",
+                "engineertoolkit",
+                "compacttoolkit",
+                "professionaltoolkit"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("toolkits")
-        } else if (listOf("screwdriver", "flatheadscrewdriver", "phillipsscrewdriver", "torxscrewdriver", "hexscrewdriver", "multibitsscrewdriver", "electricscrewdriver", "magneticscrewdriver", "precisionscrewdriver", "insulatedscrewdriver", "longhandlescrewdriver", "stubbyhandlescrewdriver", "ratchetingscrewdriver", "jewelrystoolkit", "flexibleshaftscrewdriver", "pocketclipsscrewdriver").any { text.contains(it) }) {
+        } else if (listOf(
+                "screwdriver",
+                "flatheadscrewdriver",
+                "phillipsscrewdriver",
+                "torxscrewdriver",
+                "hexscrewdriver",
+                "multibitsscrewdriver",
+                "electricscrewdriver",
+                "magneticscrewdriver",
+                "precisionscrewdriver",
+                "insulatedscrewdriver",
+                "longhandlescrewdriver",
+                "stubbyhandlescrewdriver",
+                "ratchetingscrewdriver",
+                "jewelrystoolkit",
+                "flexibleshaftscrewdriver",
+                "pocketclipsscrewdriver"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("screwdrivers")
-        } else if (listOf("extensioncord", "powerstrip", "longextensioncord", "surgeprotectedextensioncord", "outdoorextensioncord", "usbextensioncord", "multi-plugextensioncord", "heavy-dutyextensioncord", "angledplugextensioncord", "shortextensioncord", "retractableextensioncord", "cablemanagementextensioncord", "thinflatcableextensioncord", "coilextensioncord", "wall-mountedextensioncord").any { text.contains(it) }) {
+        } else if (listOf(
+                "extensioncord",
+                "powerstrip",
+                "longextensioncord",
+                "surgeprotectedextensioncord",
+                "outdoorextensioncord",
+                "usbextensioncord",
+                "multi-plugextensioncord",
+                "heavy-dutyextensioncord",
+                "angledplugextensioncord",
+                "shortextensioncord",
+                "retractableextensioncord",
+                "cablemanagementextensioncord",
+                "thinflatcableextensioncord",
+                "coilextensioncord",
+                "wall-mountedextensioncord"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("extensioncords")
-        } else if (listOf("studylamp", "desklamp", "ledstudylamp", "adjustablestudylamp", "clip-onstudylamp", "dimmablestudylamp", "architectstudylamp", "touchcontrolstudylamp", "portablelamp", "warmwhitestudylamp", "coolwhitestudylamp", "batteryoperatedstudylamp", "usbpoweredstudylamp", "foldablestudylamp", "smartstudylamp").any { text.contains(it) }) {
+        } else if (listOf(
+                "studylamp",
+                "desklamp",
+                "ledstudylamp",
+                "adjustablestudylamp",
+                "clip-onstudylamp",
+                "dimmablestudylamp",
+                "architectstudylamp",
+                "touchcontrolstudylamp",
+                "portablelamp",
+                "warmwhitestudylamp",
+                "coolwhitestudylamp",
+                "batteryoperatedstudylamp",
+                "usbpoweredstudylamp",
+                "foldablestudylamp",
+                "smartstudylamp"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("lamps")
-        } else if (listOf("ethernetcable", "cat5ethernetcable", "cat6ethernetcable", "cat7ethernetcable", "cat8ethernetcable", "shieldedethernetcable", "flatethernetcable", "highspeedethernetcable", "goldplatedethernetcable", "rj45ethernetcable", "gamingethernetcable", "longethernetcable", "shortethernetcable", "waterproofethernetcable", "braidedsleeveethernetcable", "slimethernetcable").any { text.contains(it) }) {
+        } else if (listOf(
+                "ethernetcable",
+                "cat5ethernetcable",
+                "cat6ethernetcable",
+                "cat7ethernetcable",
+                "cat8ethernetcable",
+                "shieldedethernetcable",
+                "flatethernetcable",
+                "highspeedethernetcable",
+                "goldplatedethernetcable",
+                "rj45ethernetcable",
+                "gamingethernetcable",
+                "longethernetcable",
+                "shortethernetcable",
+                "waterproofethernetcable",
+                "braidedsleeveethernetcable",
+                "slimethernetcable"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("ethernetcables")
-        } else if (listOf("usb", "usb2.0", "usb3.0", "usbcable", "usbhub", "usbadapter", "usbflashdrive", "usbtypec", "lightningusb", "micro-usb", "miniusb", "highspeedusb", "usbextension", "usbcharger", "usbdatacable").any { text.contains(it) }) {
+        } else if (listOf(
+                "usb",
+                "usb2.0",
+                "usb3.0",
+                "usbcable",
+                "usbhub",
+                "usbadapter",
+                "usbflashdrive",
+                "usbtypec",
+                "lightningusb",
+                "micro-usb",
+                "miniusb",
+                "highspeedusb",
+                "usbextension",
+                "usbcharger",
+                "usbdatacable"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("usb")
-        } else if (listOf("hdmicable", "hdmi", "hdmi2.0", "hdmi2.1", "4khdmi", "8khdmi", "highspeedhdmi", "goldplatedhdmi", "slimhdmi", "mini-hdmi", "micro-hdmi", "braidedhdmi", "hdmitousbc", "hdmitovga", "hdmitodvi", "hdmisplitter").any { text.contains(it) }) {
+        } else if (listOf(
+                "hdmicable",
+                "hdmi",
+                "hdmi2.0",
+                "hdmi2.1",
+                "4khdmi",
+                "8khdmi",
+                "highspeedhdmi",
+                "goldplatedhdmi",
+                "slimhdmi",
+                "mini-hdmi",
+                "micro-hdmi",
+                "braidedhdmi",
+                "hdmitousbc",
+                "hdmitovga",
+                "hdmitodvi",
+                "hdmisplitter"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("hdmi")
-        } else if (listOf("headphonesplitter", "audiosplitter", "stereosplitter", "3.5mmsplitter", "dualheadphonesplitter", "micandaudiosplitter", "y-splitter", "lightningsplitter", "usbcsplitter", "bluetoothsplitter", "wirelessheadphonesplitter", "auxsplitter", "splitteradapter", "gamingheadsetsplitter", "hdsplitter").any { text.contains(it) }) {
+        } else if (listOf(
+                "headphonesplitter",
+                "audiosplitter",
+                "stereosplitter",
+                "3.5mmsplitter",
+                "dualheadphonesplitter",
+                "micandaudiosplitter",
+                "y-splitter",
+                "lightningsplitter",
+                "usbcsplitter",
+                "bluetoothsplitter",
+                "wirelessheadphonesplitter",
+                "auxsplitter",
+                "splitteradapter",
+                "gamingheadsetsplitter",
+                "hdsplitter"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("headphone_splitters")
-        } else if (listOf("headphones", "earphones", "headphone", "earphone", "boat", "wirelessheadphones", "bluetoothheadphones", "overearheadphones", "onearheadphones", "noisecancelingheadphones", "gamingheadphones", "studioheadphones", "bassboostheadphones", "sportheadphones", "foldableheadphones", "wiredheadphones", "hifiheadphones", "djheadphones", "travelheadphones", "usbheadphones").any { text.contains(it) }) {
+        } else if (listOf(
+                "headphones",
+                "earphones",
+                "headphone",
+                "earphone",
+                "boat",
+                "wirelessheadphones",
+                "bluetoothheadphones",
+                "overearheadphones",
+                "onearheadphones",
+                "noisecancelingheadphones",
+                "gamingheadphones",
+                "studioheadphones",
+                "bassboostheadphones",
+                "sportheadphones",
+                "foldableheadphones",
+                "wiredheadphones",
+                "hifiheadphones",
+                "djheadphones",
+                "travelheadphones",
+                "usbheadphones"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("headphones")
-        } else if (listOf("bookshelf", "woodenbookshelf", "metalbookshelf", "floatingbookshelf", "cornerbookshelf", "ladderbookshelf", "glassbookshelf", "modularbookshelf", "walldecorbookshelf", "compactbookshelf", "tallbookshelf", "minimalistbookshelf", "smallspacebookshelf", "adjustablebookshelf", "multilayerbookshelf", "diybookshelf").any { text.contains(it) }) {
+        } else if (listOf(
+                "bookshelf",
+                "woodenbookshelf",
+                "metalbookshelf",
+                "floatingbookshelf",
+                "cornerbookshelf",
+                "ladderbookshelf",
+                "glassbookshelf",
+                "modularbookshelf",
+                "walldecorbookshelf",
+                "compactbookshelf",
+                "tallbookshelf",
+                "minimalistbookshelf",
+                "smallspacebookshelf",
+                "adjustablebookshelf",
+                "multilayerbookshelf",
+                "diybookshelf"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("bookshelves")
-        } else if (listOf("whiteboard", "dryeraseboard", "magneticwhiteboard", "glasswhiteboard", "portablewhiteboard", "smallwhiteboard", "classroomwhiteboard", "officewhiteboard", "framelesswhiteboard", "flipchartwhiteboard", "rollingwhiteboard", "double-sidedwhiteboard", "stickablewhiteboard", "deskwhiteboard", "digitalwhiteboard", "kidswhiteboard").any { text.contains(it) }) {
+        } else if (listOf(
+                "whiteboard",
+                "dryeraseboard",
+                "magneticwhiteboard",
+                "glasswhiteboard",
+                "portablewhiteboard",
+                "smallwhiteboard",
+                "classroomwhiteboard",
+                "officewhiteboard",
+                "framelesswhiteboard",
+                "flipchartwhiteboard",
+                "rollingwhiteboard",
+                "double-sidedwhiteboard",
+                "stickablewhiteboard",
+                "deskwhiteboard",
+                "digitalwhiteboard",
+                "kidswhiteboard"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("whiteboards")
-        } else if (listOf("marker", "permanentmarker", "whitemarker", "blackmarker", "coloredmarker", "dryerasemarker", "highlightermarker", "boardmarker", "finepointmarker", "calligraphymarker", "paintmarker", "artisticmarker", "dual-tipmarker", "fluorescentmarker", "waterproofmarker").any { text.contains(it) }) {
+        } else if (listOf(
+                "marker",
+                "permanentmarker",
+                "whitemarker",
+                "blackmarker",
+                "coloredmarker",
+                "dryerasemarker",
+                "highlightermarker",
+                "boardmarker",
+                "finepointmarker",
+                "calligraphymarker",
+                "paintmarker",
+                "artisticmarker",
+                "dual-tipmarker",
+                "fluorescentmarker",
+                "waterproofmarker"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("markers")
-        } else if (listOf("clipboard", "woodenclipboard", "plasticclipboard", "metalclipboard", "foldingclipboard", "a4clipboard", "clipboardwithstorage", "personalizedclipboard", "miniclipboard", "documentholderclipboard", "clipboardsheet", "officeclipboard", "presentationclipboard", "sturdyclipboard", "notepadclipboard", "portableclipboard").any { text.contains(it) }) {
+        } else if (listOf(
+                "clipboard",
+                "woodenclipboard",
+                "plasticclipboard",
+                "metalclipboard",
+                "foldingclipboard",
+                "a4clipboard",
+                "clipboardwithstorage",
+                "personalizedclipboard",
+                "miniclipboard",
+                "documentholderclipboard",
+                "clipboardsheet",
+                "officeclipboard",
+                "presentationclipboard",
+                "sturdyclipboard",
+                "notepadclipboard",
+                "portableclipboard"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("clipboards")
-        } else if (listOf("tshirt", "cottonshirt", "graphictee", "roundnecktshirt", "v-necktshirt", "oversizetshirt", "slimfittshirt", "plainwhitetshirt", "pockettshirt", "polo-shirt", "sportsdryfittshirt", "longsleevetshirt", "crop-top", "customtshirt", "brandedtshirt", "trendyprintedtshirt").any { text.contains(it) }) {
+        } else if (listOf(
+                "tshirt",
+                "cottonshirt",
+                "graphictee",
+                "roundnecktshirt",
+                "v-necktshirt",
+                "oversizetshirt",
+                "slimfittshirt",
+                "plainwhitetshirt",
+                "pockettshirt",
+                "polo-shirt",
+                "sportsdryfittshirt",
+                "longsleevetshirt",
+                "crop-top",
+                "customtshirt",
+                "brandedtshirt",
+                "trendyprintedtshirt"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("tshirts")
-        } else if (listOf("hoodie", "zipperhoodie", "pulloverhoodie", "fleecehoodie", "sleevelesshoodie", "croppedhoodie", "graphicprintshoodie", "sportswearhoodie", "winterhoodie", "streetwearhoodie", "plaincolorhoodie", "oversizedhoodie", "thermohoodie", "fashionablehoodie", "comfyhoodie", "casualhoodie").any { text.contains(it) }) {
+        } else if (listOf(
+                "hoodie",
+                "zipperhoodie",
+                "pulloverhoodie",
+                "fleecehoodie",
+                "sleevelesshoodie",
+                "croppedhoodie",
+                "graphicprintshoodie",
+                "sportswearhoodie",
+                "winterhoodie",
+                "streetwearhoodie",
+                "plaincolorhoodie",
+                "oversizedhoodie",
+                "thermohoodie",
+                "fashionablehoodie",
+                "comfyhoodie",
+                "casualhoodie"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("hoodies")
-        } else if (listOf("jean", "denimjean", "skinnyjean", "slimfitjean", "regularfitjean", "bootcutjean", "highwaistjean", "lowrisejean", "rippedjean", "stretchablejean", "blackdenimjean", "bluejean", "boyfriendjean", "baggyjean", "cargojean", "straightcutjeans").any { text.contains(it) }) {
+        } else if (listOf(
+                "jean",
+                "denimjean",
+                "skinnyjean",
+                "slimfitjean",
+                "regularfitjean",
+                "bootcutjean",
+                "highwaistjean",
+                "lowrisejean",
+                "rippedjean",
+                "stretchablejean",
+                "blackdenimjean",
+                "bluejean",
+                "boyfriendjean",
+                "baggyjean",
+                "cargojean",
+                "straightcutjeans"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("jeans")
-        } else if (listOf("dress", "cocktaildress", "casualdress", "formaldress", "sundress", "bodycondress", "wrapdress", "maxidress", "minidress", "midi dress", "partywear", "floralprintdress", "offshoulderdress", "cottondress", "satinfabricdress", "weddingdress").any { text.contains(it) }) {
+        } else if (listOf(
+                "dress",
+                "cocktaildress",
+                "casualdress",
+                "formaldress",
+                "sundress",
+                "bodycondress",
+                "wrapdress",
+                "maxidress",
+                "minidress",
+                "midi dress",
+                "partywear",
+                "floralprintdress",
+                "offshoulderdress",
+                "cottondress",
+                "satinfabricdress",
+                "weddingdress"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("dresses")
-        } else if (listOf("coat", "wintercoat", "trenchcoat", "pea-coat", "overcoat", "leathercoat", "furcoat", "woolencoat", "puffercoat", "denimcoat", "militarycoat", "longcoat", "shortcoat", "stylishcoat", "formalfittedcoat", "casualcoat").any { text.contains(it) }) {
+        } else if (listOf(
+                "coat",
+                "wintercoat",
+                "trenchcoat",
+                "pea-coat",
+                "overcoat",
+                "leathercoat",
+                "furcoat",
+                "woolencoat",
+                "puffercoat",
+                "denimcoat",
+                "militarycoat",
+                "longcoat",
+                "shortcoat",
+                "stylishcoat",
+                "formalfittedcoat",
+                "casualcoat"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("coats")
-        } else if (listOf("glove", "winterglove", "leatherglove", "woolglove", "fingerlessglove", "touchscreenglove", "sportsglove", "bikingglove", "drivingglove", "gardeningglove", "heatresistantglove", "cottonknitglove", "rubberglove", "gymglove", "workglove", "insulatedgloves").any { text.contains(it) }) {
+        } else if (listOf(
+                "glove",
+                "winterglove",
+                "leatherglove",
+                "woolglove",
+                "fingerlessglove",
+                "touchscreenglove",
+                "sportsglove",
+                "bikingglove",
+                "drivingglove",
+                "gardeningglove",
+                "heatresistantglove",
+                "cottonknitglove",
+                "rubberglove",
+                "gymglove",
+                "workglove",
+                "insulatedgloves"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("gloves")
-        } else if (listOf("cap", "baseballcap", "truckerhat", "snapbackcap", "dadcap", "beaniecap", "bucketcap", "flatcap", "visorcap", "sportsrunningcap", "sunprotectioncap", "adjustablecap", "woolcap", "canvascap", "stylishcap", "designerbrandcap").any { text.contains(it) }) {
+        } else if (listOf(
+                "cap",
+                "baseballcap",
+                "truckerhat",
+                "snapbackcap",
+                "dadcap",
+                "beaniecap",
+                "bucketcap",
+                "flatcap",
+                "visorcap",
+                "sportsrunningcap",
+                "sunprotectioncap",
+                "adjustablecap",
+                "woolcap",
+                "canvascap",
+                "stylishcap",
+                "designerbrandcap"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("caps")
-        } else if (listOf("blanket", "fleeceblanket", "cottonblanket", "woolblanket", "heatedblanket", "weightedblanket", "throwblanket", "quiltedblanket", "duvetblanket", "lightweightblanket", "campingblanket", "travelblanket", "winterblanket", "summerblanket", "bedroomblanket", "knittedblanket").any { text.contains(it) }) {
+        } else if (listOf(
+                "blanket",
+                "fleeceblanket",
+                "cottonblanket",
+                "woolblanket",
+                "heatedblanket",
+                "weightedblanket",
+                "throwblanket",
+                "quiltedblanket",
+                "duvetblanket",
+                "lightweightblanket",
+                "campingblanket",
+                "travelblanket",
+                "winterblanket",
+                "summerblanket",
+                "bedroomblanket",
+                "knittedblanket"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("blankets")
-        } else if (listOf("crockery", "ceramiccrockery", "porcelaincrockery", "glasscrockery", "stainlesssteelcrockery", "dinnerplate", "bowlandspoon", "teacup", "mugset", "servingtray", "cutleryset", "stonewarecrockery", "finediningcrockery", "customcrockery", "kidsfriendlycrockery", "microwavesafecrockery").any { text.contains(it) }) {
+        } else if (listOf(
+                "crockery",
+                "ceramiccrockery",
+                "porcelaincrockery",
+                "glasscrockery",
+                "stainlesssteelcrockery",
+                "dinnerplate",
+                "bowlandspoon",
+                "teacup",
+                "mugset",
+                "servingtray",
+                "cutleryset",
+                "stonewarecrockery",
+                "finediningcrockery",
+                "customcrockery",
+                "kidsfriendlycrockery",
+                "microwavesafecrockery"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("crockery")
-        } else if (listOf("waterfilter", "rofilter", "ufwaterfilter", "gravitywaterfilter", "portablewaterfilter", "uvpurifier", "homewaterfilter", "activatedcarbonfilter", "alkalinewaterfilter", "countertopfilter", "under-sinkfilter", "refrigeratorwaterfilter", "faucetwaterfilter", "wholehousewaterfilter", "reverseosmosiswaterfilter").any { text.contains(it) }) {
+        } else if (listOf(
+                "waterfilter",
+                "rofilter",
+                "ufwaterfilter",
+                "gravitywaterfilter",
+                "portablewaterfilter",
+                "uvpurifier",
+                "homewaterfilter",
+                "activatedcarbonfilter",
+                "alkalinewaterfilter",
+                "countertopfilter",
+                "under-sinkfilter",
+                "refrigeratorwaterfilter",
+                "faucetwaterfilter",
+                "wholehousewaterfilter",
+                "reverseosmosiswaterfilter"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("waterfilters")
-        } else if (listOf("storageboxe", "plasticstoragebox", "woodenstoragebox", "metalstoragebox", "fabricstoragebox", "underbedstorage", "foldablestoragebox", "stackablestoragebox", "drawerorganizerbox", "airtightstoragebox", "toystoragebox", "decorativestoragebox", "portablelockbox", "cardboardstoragebox", "kitchenstoragebox", "multipurposeorganizer").any { text.contains(it) }) {
+        } else if (listOf(
+                "storageboxe",
+                "plasticstoragebox",
+                "woodenstoragebox",
+                "metalstoragebox",
+                "fabricstoragebox",
+                "underbedstorage",
+                "foldablestoragebox",
+                "stackablestoragebox",
+                "drawerorganizerbox",
+                "airtightstoragebox",
+                "toystoragebox",
+                "decorativestoragebox",
+                "portablelockbox",
+                "cardboardstoragebox",
+                "kitchenstoragebox",
+                "multipurposeorganizer"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("storageboxes")
-        } else if (listOf("tupperware", "plasticcontainer", "airtightcontainer", "foodstoragebox", "kitchenstorage", "microwavesafecontainer", "stackablecontainer", "bpa-freecontainer", "leakproofcontainer", "tiffinbox", "lunchbox", "modulartupperware", "freezer-safecontainer", "snaplockcontainer", "siliconefoodstorage").any { text.contains(it) }) {
+        } else if (listOf(
+                "tupperware",
+                "plasticcontainer",
+                "airtightcontainer",
+                "foodstoragebox",
+                "kitchenstorage",
+                "microwavesafecontainer",
+                "stackablecontainer",
+                "bpa-freecontainer",
+                "leakproofcontainer",
+                "tiffinbox",
+                "lunchbox",
+                "modulartupperware",
+                "freezer-safecontainer",
+                "snaplockcontainer",
+                "siliconefoodstorage"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("tupperware")
-        } else if (listOf("fan", "ceilingfan", "tablefan", "pedestalfan", "towerfan", "bladelessfan", "exhaustfan", "wallfan", "boxfan", "usbportablefan", "batteryfan", "industrialfan", "coolingfan", "cliponfan", "solar-poweredfan", "silentfan").any { text.contains(it) }) {
+        } else if (listOf(
+                "fan",
+                "ceilingfan",
+                "tablefan",
+                "pedestalfan",
+                "towerfan",
+                "bladelessfan",
+                "exhaustfan",
+                "wallfan",
+                "boxfan",
+                "usbportablefan",
+                "batteryfan",
+                "industrialfan",
+                "coolingfan",
+                "cliponfan",
+                "solar-poweredfan",
+                "silentfan"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("fans")
-        } else if (listOf("powerstrip", "extensionboard", "multiplepoweroutlet", "surgeprotector", "usbpowerstrip", "smartpowerstrip", "flatplugpowerstrip", "travelpowerstrip", "desktopchargingstation", "longcordpowerstrip", "powerbar", "6-outletpowerstrip", "8-outletpowerstrip", "wallmountpowerstrip", "industrialpowerstrip").any { text.contains(it) }) {
+        } else if (listOf(
+                "powerstrip",
+                "extensionboard",
+                "multiplepoweroutlet",
+                "surgeprotector",
+                "usbpowerstrip",
+                "smartpowerstrip",
+                "flatplugpowerstrip",
+                "travelpowerstrip",
+                "desktopchargingstation",
+                "longcordpowerstrip",
+                "powerbar",
+                "6-outletpowerstrip",
+                "8-outletpowerstrip",
+                "wallmountpowerstrip",
+                "industrialpowerstrip"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("powerstrips")
-        } else if (listOf("smartspeaker", "voiceassistant", "echospeaker", "googlehome", "alexaspeaker", "nestaudio", "sonosspeaker", "bluetoothsmartspeaker", "bosehome", "jblsmartspeaker", "hifismartspeaker", "stereosmartspeaker", "applehomepod", "smartdisplay", "multifunctionalspeaker").any { text.contains(it) }) {
+        } else if (listOf(
+                "smartspeaker",
+                "voiceassistant",
+                "echospeaker",
+                "googlehome",
+                "alexaspeaker",
+                "nestaudio",
+                "sonosspeaker",
+                "bluetoothsmartspeaker",
+                "bosehome",
+                "jblsmartspeaker",
+                "hifismartspeaker",
+                "stereosmartspeaker",
+                "applehomepod",
+                "smartdisplay",
+                "multifunctionalspeaker"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("smartspeakers")
-        } else if (listOf("vrheadset", "virtualreality", "oculusrift", "quest2", "htcvive", "playstationvr", "steamvr", "mixedrealityheadset", "standalonevr", "wirelessvr", "pimaxvr", "hpreverb", "varjovr", "metavr", "vrgamingheadset", "augmentedrealityheadset").any { text.contains(it) }) {
+        } else if (listOf(
+                "vrheadset",
+                "virtualreality",
+                "oculusrift",
+                "quest2",
+                "htcvive",
+                "playstationvr",
+                "steamvr",
+                "mixedrealityheadset",
+                "standalonevr",
+                "wirelessvr",
+                "pimaxvr",
+                "hpreverb",
+                "varjovr",
+                "metavr",
+                "vrgamingheadset",
+                "augmentedrealityheadset"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("vrheadsets")
-        } else if (listOf("actioncamera", "gopro", "insta360", "sonyrx0", "djiosmoaction", "polaroidcube", "xiaomiyi", "garminvirb", "rollei", "sjcam", "akaso", "waterproofactioncam", "4kactioncamera", "helmetcamera", "sportsactioncamera", "compactactioncamera").any { text.contains(it) }) {
+        } else if (listOf(
+                "actioncamera",
+                "gopro",
+                "insta360",
+                "sonyrx0",
+                "djiosmoaction",
+                "polaroidcube",
+                "xiaomiyi",
+                "garminvirb",
+                "rollei",
+                "sjcam",
+                "akaso",
+                "waterproofactioncam",
+                "4kactioncamera",
+                "helmetcamera",
+                "sportsactioncamera",
+                "compactactioncamera"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("actioncameras")
-        } else if (listOf("binder", "ringbinder", "leatherbinder", "filefolder", "d-ringbinder", "spiralbinder", "pocketbinder", "3-ringbinder", "a4binder", "notebookbinder", "documentorganizer", "presentationbinder", "portfoliofolder", "studentbinder", "coloredbinder", "personalizedbinder").any { text.contains(it) }) {
+        } else if (listOf(
+                "binder",
+                "ringbinder",
+                "leatherbinder",
+                "filefolder",
+                "d-ringbinder",
+                "spiralbinder",
+                "pocketbinder",
+                "3-ringbinder",
+                "a4binder",
+                "notebookbinder",
+                "documentorganizer",
+                "presentationbinder",
+                "portfoliofolder",
+                "studentbinder",
+                "coloredbinder",
+                "personalizedbinder"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("binders")
-        } else if (listOf("highlighter", "fluorescentmarker", "gelhighlighter", "pastelhighlighter", "erasablehighlighter", "dual-tipmarker", "liquidhighlighter", "chisel-tipmarker", "smudge-proofhighlighter", "schoolhighlighter", "officehighlighter", "neonhighlighter", "softcolorhighlighter", "textmarker", "multicolormarker", "finepointhighlighter").any { text.contains(it) }) {
+        } else if (listOf(
+                "highlighter",
+                "fluorescentmarker",
+                "gelhighlighter",
+                "pastelhighlighter",
+                "erasablehighlighter",
+                "dual-tipmarker",
+                "liquidhighlighter",
+                "chisel-tipmarker",
+                "smudge-proofhighlighter",
+                "schoolhighlighter",
+                "officehighlighter",
+                "neonhighlighter",
+                "softcolorhighlighter",
+                "textmarker",
+                "multicolormarker",
+                "finepointhighlighter"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("highlighters")
-        } else if (listOf("scanner", "documentscanner", "portablescanner", "wirelessscanner", "flatbedscanner", "photoandfilmscanner", "handheldscanner", "barcodescanner", "multipagescanner", "fastscanningdevice", "ocrscanner", "usbscanner", "studentscanner", "idscanner", "compactscanner", "officescanner").any { text.contains(it) }) {
+        } else if (listOf(
+                "scanner",
+                "documentscanner",
+                "portablescanner",
+                "wirelessscanner",
+                "flatbedscanner",
+                "photoandfilmscanner",
+                "handheldscanner",
+                "barcodescanner",
+                "multipagescanner",
+                "fastscanningdevice",
+                "ocrscanner",
+                "usbscanner",
+                "studentscanner",
+                "idscanner",
+                "compactscanner",
+                "officescanner"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("scanners")
-        } else if (listOf("tripod", "cameratripod", "dslrtripod", "flexibletripod", "phoneholdertripod", "lightweighttripod", "miniportabletripod", "gimbaltripod", "vloggingtripod", "tabletoptripod", "traveltripod", "heavy-dutytripod", "adjustabletripod", "professionaltripod", "tripodwithselfiestick", "compacttripod").any { text.contains(it) }) {
+        } else if (listOf(
+                "tripod",
+                "cameratripod",
+                "dslrtripod",
+                "flexibletripod",
+                "phoneholdertripod",
+                "lightweighttripod",
+                "miniportabletripod",
+                "gimbaltripod",
+                "vloggingtripod",
+                "tabletoptripod",
+                "traveltripod",
+                "heavy-dutytripod",
+                "adjustabletripod",
+                "professionaltripod",
+                "tripodwithselfiestick",
+                "compacttripod"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("tripods")
-        } else if (listOf("mousepad", "gamingmousepad", "largeextendedmousepad", "rgbmousepad", "ergonomicmousepad", "softfabricmousepad", "leathermousepad", "hardplasticsurface", "wristrestmousepad", "waterproofmousepad", "wirelesschargingmousepad", "customdesignmousepad", "studentmousepad", "minimalistmousepad", "precisionmousepad", "deskpad").any { text.contains(it) }) {
+        } else if (listOf(
+                "mousepad",
+                "gamingmousepad",
+                "largeextendedmousepad",
+                "rgbmousepad",
+                "ergonomicmousepad",
+                "softfabricmousepad",
+                "leathermousepad",
+                "hardplasticsurface",
+                "wristrestmousepad",
+                "waterproofmousepad",
+                "wirelesschargingmousepad",
+                "customdesignmousepad",
+                "studentmousepad",
+                "minimalistmousepad",
+                "precisionmousepad",
+                "deskpad"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("mousepads")
-        } else if (listOf("fitnessband", "fitnesstracker", "smartband", "mi-band", "fitbit", "garminfitnessband", "samsungeband", "huaweifitband", "waterprooffitnessband", "bluetoothfitnessband", "heartmonitorband", "steptracker", "activitymonitorband", "sleeptrackerband", "calorieburnband", "sportsfitnessband").any { text.contains(it) }) {
+        } else if (listOf(
+                "fitnessband",
+                "fitnesstracker",
+                "smartband",
+                "mi-band",
+                "fitbit",
+                "garminfitnessband",
+                "samsungeband",
+                "huaweifitband",
+                "waterprooffitnessband",
+                "bluetoothfitnessband",
+                "heartmonitorband",
+                "steptracker",
+                "activitymonitorband",
+                "sleeptrackerband",
+                "calorieburnband",
+                "sportsfitnessband"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("fitnessbands")
-        } else if (listOf("studytable", "sturdytable", "woodentable", "foldingtable", "compactstudytable", "adjustablestudytable", "desk", "writingtable", "laptoptable", "studenttable", "workspace", "readingtable", "hostelstudytable", "studyfurniture", "studysetup", "ergonomicstudytable").any { text.contains(it) }) {
+        } else if (listOf(
+                "studytable",
+                "sturdytable",
+                "woodentable",
+                "foldingtable",
+                "compactstudytable",
+                "adjustablestudytable",
+                "desk",
+                "writingtable",
+                "laptoptable",
+                "studenttable",
+                "workspace",
+                "readingtable",
+                "hostelstudytable",
+                "studyfurniture",
+                "studysetup",
+                "ergonomicstudytable"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("studytables")
-        } else if (listOf("laptop", "gaminglaptop", "ultrabook", "businesslaptop", "studentlaptop", "macbook", "windowslaptop", "chromebook", "budgetlaptop", "desktop", "pc", "allinonepc", "towerpc", "minipc", "custompc").any { text.contains(it) }) {
+        } else if (listOf(
+                "laptop",
+                "gaminglaptop",
+                "ultrabook",
+                "businesslaptop",
+                "studentlaptop",
+                "macbook",
+                "windowslaptop",
+                "chromebook",
+                "budgetlaptop",
+                "desktop",
+                "pc",
+                "allinonepc",
+                "towerpc",
+                "minipc",
+                "custompc"
+            ).any { text.contains(it) }
+        ) {
             loadLottieAnimation("laptops")
         }
 
     }
 
-    var currentLottieFile : String? = null      // class-scope
+    var currentLottieFile: String? = null      // class-scope
 
     // in loadLottieAnimation, needed to figure out how is the thread set, and it's flow. Needed to learn.
     private fun loadLottieAnimation(category: String) {
 
-        if(currentLottieFile!="$category.json") {       // runs only if lottie file is different than previous one, if it is the same, not need to run the same file again
+        if (currentLottieFile != "$category.json") {       // runs only if lottie file is different than previous one, if it is the same, not need to run the same file again
 //            Toast.makeText(requireContext(), "Current Lottie File: $currentLottieFile && category.json: $category.json", Toast.LENGTH_SHORT).show()
             val context = requireContext()
             val directory = File(context.filesDir, "ProductCategory")
@@ -1533,7 +3453,7 @@ class ProductNameFragment : Fragment() {
                 directory.mkdirs()
             }
             val localFile = File(directory, "$category.json")
-            if (localFile.exists()){
+            if (localFile.exists()) {
                 val jsonString = localFile.readText() // Read file in IO thread
 
                 binding!!.lottieView.visibility = View.VISIBLE
@@ -1541,8 +3461,7 @@ class ProductNameFragment : Fragment() {
                 binding!!.lottieView.setAnimationFromJson(jsonString)
                 binding!!.lottieView.playAnimation()
                 Toast.makeText(requireContext(), "WE ARE IN IF", Toast.LENGTH_SHORT).show()
-            }
-            else {
+            } else {
                 Toast.makeText(requireContext(), "WE ARE IN ELSE", Toast.LENGTH_SHORT).show()
                 val lottieAnimationRef = firebaseStorageRef.child("ProductCategory/$category.json")
 
@@ -1579,36 +3498,36 @@ class ProductNameFragment : Fragment() {
 //        if(currentLottieFile!="$category.json" || viewModel.lottieInNameFragment.value != null) {       // runs only if lottie file is differnt than previous one, if it is the same, not need to run the same file again
 
 //            Toast.makeText(requireContext(), "PLAYED: $category", Toast.LENGTH_SHORT).show()
-            val context = requireContext()
-            val directory = File(context.filesDir, "ProductCategory")
-            if (!directory.exists()) {
-                directory.mkdirs()
-            }
-            val localFile = File(directory, "$category")
+        val context = requireContext()
+        val directory = File(context.filesDir, "ProductCategory")
+        if (!directory.exists()) {
+            directory.mkdirs()
+        }
+        val localFile = File(directory, "$category")
 
-            // Run in Background Thread using Coroutines
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    lottieAnimationRef.getFile(localFile)
-                        .await()  // Use await() to suspend until download completes
-                    Log.d("LottieDownload", "File downloaded successfully: ${localFile.path}")
+        // Run in Background Thread using Coroutines
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                lottieAnimationRef.getFile(localFile)
+                    .await()  // Use await() to suspend until download completes
+                Log.d("LottieDownload", "File downloaded successfully: ${localFile.path}")
 
-                    val jsonString = localFile.readText() // Read file in IO thread
+                val jsonString = localFile.readText() // Read file in IO thread
 
-                    // Switch to Main thread to update UI
-                    withContext(Dispatchers.Main) {
-                        binding!!.lottieView.visibility = View.VISIBLE
-                        currentLottieFile = "$category"
-                        binding!!.lottieView.setAnimationFromJson(jsonString)
-                        binding!!.lottieView.playAnimation()
-                    }
-                } catch (e: Exception) {
-                    Log.e("LottieDownload", "Failed to download file: ${e.message}")
-                    withContext(Dispatchers.Main) {
+                // Switch to Main thread to update UI
+                withContext(Dispatchers.Main) {
+                    binding!!.lottieView.visibility = View.VISIBLE
+                    currentLottieFile = "$category"
+                    binding!!.lottieView.setAnimationFromJson(jsonString)
+                    binding!!.lottieView.playAnimation()
+                }
+            } catch (e: Exception) {
+                Log.e("LottieDownload", "Failed to download file: ${e.message}")
+                withContext(Dispatchers.Main) {
 //                        Toast.makeText(requireContext(), "$e", Toast.LENGTH_SHORT).show()
-                    }
                 }
             }
+        }
 //        }
     }
 
@@ -1718,7 +3637,8 @@ class ProductNameFragment : Fragment() {
 
     // Function to hide keyboard and execute your logic
     private fun hideKeyboardAndExecuteLogic(view: View) {
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
 
         view.clearFocus() // Clear focus to prevent reopening keyboard
@@ -1731,7 +3651,7 @@ class ProductNameFragment : Fragment() {
         val s = binding!!.editTextProductName.text
         val text = s.toString()
 
-        if(text.contains("(") && text.contains(")")){
+        if (text.contains("(") && text.contains(")")) {
 
             // Check if we have the brackets: if no, then go --> to our Logic
             // If have brackets, but not category matched go --> to our logic
@@ -2435,8 +4355,7 @@ class ProductNameFragment : Fragment() {
                     logicForLoadingLottieIfUserEnterNoPreDefinedInputs(text)
                 }
             }
-        }
-        else{
+        } else {
             // Our Logic
             logicForLoadingLottieIfUserEnterNoPreDefinedInputs(text)
         }

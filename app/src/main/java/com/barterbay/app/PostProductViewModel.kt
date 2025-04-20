@@ -8,17 +8,18 @@ import com.airbnb.lottie.LottieAnimationView
 class PostProductViewModel : ViewModel() {
     val name = MutableLiveData<String>()
     val lottieInNameFragment = MutableLiveData<String>()
-    val category = MutableLiveData<String>()
+    val categoryLottieName = MutableLiveData<String>()
     //    val images = MutableLiveData<List<Uri>>)
-    val images = MutableLiveData<String>()
-    val price = MutableLiveData<String>()
+    val images = MutableLiveData<List<Uri>>()
+    val selectedCategory = MutableLiveData<CategoryModel?>()
+    val price = MutableLiveData<Double>()
     val summary = MutableLiveData<String>()
 
-    fun reset() {
-        category.value = ""
-//        images.value = emptyList()
-        images.value = ""
-        price.value = ""
-        summary.value = ""
-    }
+//    fun reset() {
+//        category.value = ""
+////        images.value = emptyList()
+//        images.value = ""
+//        price.value = ""
+//        summary.value = ""
+//    }
 }

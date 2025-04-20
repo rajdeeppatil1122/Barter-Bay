@@ -2,7 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="light_blue_inapp">#F7FDFF</color> <!-- Custom white shade -->
-    <color name="light_green_inapp">#86E1FF</color> <!-- Custom white shade -->
+    <color name="more_light_blue_inapp">#F7FDFF</color> <!-- Custom white shade -->
+    <color name="light_blue_inapp">#86E1FF</color> <!-- Custom white shade -->
 
 </resources>

@@ -15,10 +15,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.barterbay.app.databinding.FragmentCategoryBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class CategoryFragment : Fragment(), CategoryAdapter.OnCategorySelectedListener {
@@ -132,27 +135,43 @@ class CategoryFragment : Fragment(), CategoryAdapter.OnCategorySelectedListener 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentCategoryBinding.inflate(inflater, container, false)   // Inflate the layout for this fragment while binding
-
+        binding = FragmentCategoryBinding.inflate(inflater, container,false)   // Inflate the layout for this fragment while binding
         // viewModel initialization
         viewModel = ViewModelProvider(requireActivity()).get(PostProductViewModel::class.java)
-
-//        if(viewModel.category.value != null){
-//            binding.categoryInput.setText(viewModel.category.value)
-//        }
-//
-//        binding.nextButton.setOnClickListener {
-//            viewModel.category.value = binding.categoryInput.text.toString()
-//            findNavController().navigate(R.id.action_category_to_images)
-//        }
 
 
         // Setup RecyclerView
         categoryAdapter = CategoryAdapter(categoryList, this)
         binding!!.categoryRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-        val spacingItemDecoration = GridSpacingItemDecoration(13, 0) // Adjust vertical and horizontal spacing as needed
+        val spacingItemDecoration =
+            GridSpacingItemDecoration(13, 0) // Adjust vertical and horizontal spacing as needed
         binding!!.categoryRecyclerView.addItemDecoration(spacingItemDecoration)
         binding!!.categoryRecyclerView.adapter = categoryAdapter
+
+
+        // Restore selection after adapter is set up
+        viewModel.selectedCategory.value?.let { category ->
+            val position = categoryList.indexOfFirst { it.name == category.name }
+            if (position != -1) {
+                // Set the selected position in adapter
+                categoryAdapter.setSelectedPosition(position)
+
+                // Trigger the UI updates
+                viewModel.categoryLottieName.value?.let {
+                    onCategorySelected(true, category.name,
+                        it
+                    )
+                }
+
+                // Scroll to the selected position
+                binding!!.categoryRecyclerView.post {
+                    binding!!.categoryRecyclerView.scrollToPosition(position)
+                }
+            }
+        }
+
+
+
 
         // Search functionality
         binding!!.searchEditText.addTextChangedListener(object : TextWatcher {
@@ -160,11 +179,13 @@ class CategoryFragment : Fragment(), CategoryAdapter.OnCategorySelectedListener 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 categoryAdapter.filter.filter(s)
             }
+
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        binding!!.selectCategoryNextBtn.setOnClickListener{
-//            context?.toast("Clicked")
+        binding!!.selectCategoryNextBtn.setOnClickListener {
+            context?.toast("Clicked")
+            findNavController().navigate(com.barterbay.app.R.id.action_category_to_images)
         }
 
 
@@ -177,13 +198,21 @@ class CategoryFragment : Fragment(), CategoryAdapter.OnCategorySelectedListener 
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
-    override fun onCategorySelected(isSelected: Boolean, categoryName: String) {
-        binding?.selectCategoryNextBtn?.apply {
+    override fun onCategorySelected(isSelected: Boolean, categoryName: String, categoryLottie: String) {
+        binding?.selectCategoryNextBtn?.apply {     // We are talking about 'CardView' here (the black button with fading-out text)...
             if (isSelected) {
+                // Save the selected category to ViewModel
+                val category = categoryList.firstOrNull { it.name == categoryName }
+                viewModel.selectedCategory.value = category
+
+                // Save the selected category's lottie view in ViewModel
+                viewModel.categoryLottieName.value = categoryLottie
+
                 if (visibility != View.VISIBLE) {
                     // First time selection → Fade in the button
                     alpha = 0f
                     visibility = View.VISIBLE
+                    isEnabled = true  // Ensure it's enabled when visible
                     animate().alpha(1f).setDuration(200).start()
                 }
 
@@ -191,13 +220,20 @@ class CategoryFragment : Fragment(), CategoryAdapter.OnCategorySelectedListener 
                 if (binding!!.selectCategoryText.text != categoryName) {
                     binding!!.selectCategoryText.apply {
                         animate().alpha(0f).setDuration(100).withEndAction {
-                            text = categoryName  // Update text
+                            text = categoryName + "  -  Tap Here" // Update text
                             animate().alpha(1f).setDuration(200).start() // Fade in new text
                         }.start()
                     }
                 }
+
+                // Ensure the selected item is highlighted
+                val selectedPos = categoryAdapter.getSelectedPosition()
+                if (selectedPos != RecyclerView.NO_POSITION) {
+                    categoryAdapter.notifyItemChanged(selectedPos)
+                }
+
             } else {
-                // If deselected (clicked the same category again), fade out the button
+                // When deselected (clicked the same category again), fade out the button
                 animate().alpha(0f).setDuration(200).withEndAction {
                     visibility = View.INVISIBLE
                     isEnabled = false
@@ -206,8 +242,9 @@ class CategoryFragment : Fragment(), CategoryAdapter.OnCategorySelectedListener 
         }
     }
 
+
     // Create an extension function for toast:
-    fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT){
+    fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
         Toast.makeText(this, message, duration).show()
     }
 }

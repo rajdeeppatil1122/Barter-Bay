@@ -19,9 +19,8 @@ class SummaryFragment : Fragment() {
         val binding = FragmentSummaryBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity()).get(PostProductViewModel::class.java)
 
-        binding.categoryTxt.text = viewModel.category.value
-        binding.priceTxt.text = viewModel.price.value
-        binding.imagesTxt.text = viewModel.images.value
+//        binding.priceTxt.text =  viewModel.price.value
+//        binding.imagesTxt.text = viewModel.images.value
 
         return binding.root
     }
